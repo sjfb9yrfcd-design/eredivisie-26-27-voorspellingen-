@@ -13,7 +13,7 @@
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
                 <h1 class="text-xl font-bold tracking-tight">Eredivisie Voorspeller <span class="text-xs bg-red-600 text-white px-2 py-0.5 rounded-full uppercase">2026/27</span></h1>
-                <p class="text-xs text-gray-500">Feyenoord, AZ, Ajax & PSV - Toegankelijke Versie</p>
+                <p class="text-xs text-gray-500">Feyenoord, AZ, Ajax & PSV - Officieel KNVB Schema</p>
             </div>
             
             <div class="flex items-center gap-3">
@@ -28,8 +28,7 @@
     <!-- Virtuele Stand & Kampioen Banner -->
     <section class="bg-gray-50 border-b border-gray-200 py-6 px-6" aria-labelledby="standings-heading">
         <div class="max-w-7xl mx-auto">
-            <h2 id="standings-heading" class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3">Virtuele Stand (Inclusief huidige stand t/m R8)</h2>
-            <!-- aria-live zorgt dat schermlezers wijzigingen direct voorlezen -->
+            <h2 id="standings-heading" class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3">Virtuele Stand (Inclusief huidige stand t/m R8)[span_12](start_span)[span_12](end_span)</h2>
             <div id="standings" class="grid grid-cols-2 md:grid-cols-4 gap-4" aria-live="polite" aria-atomic="true">
                 <!-- Wordt dynamisch gevuld -->
             </div>
@@ -45,141 +44,141 @@
 
     <!-- Footer -->
     <footer class="bg-gray-50 border-t border-gray-200 py-4 text-center text-xs text-gray-500" role="contentinfo">
-        Officiële KNVB Eredivisie 2026/27 speelschema's • Geactualiseerd t/m speelronde 8 • Volledig toegankelijk
+        Officiële KNVB Eredivisie 2026/27 speelschema's[span_13](start_span)[span_13](end_span) • Geactualiseerd t/m speelronde 8[span_14](start_span)[span_14](end_span) • Volledig toegankelijk
     </footer>
 
     <script>
         const clubData = {
             feyenoord: {
                 name: "Feyenoord",
-                basePoints: 20,
+                basePoints: 20,[span_15](start_span)[span_15](end_span)
                 badge: "bg-red-600 text-white",
                 matches: [
-                    { round: 9, opponent: "Telstar", venue: "uit" },
-                    { round: 10, opponent: "PSV", venue: "uit" },
-                    { round: 11, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 12, opponent: "sc Heerenveen", venue: "uit" },
-                    { round: 13, opponent: "Ajax", venue: "uit" },
-                    { round: 14, opponent: "Ajax", venue: "thuis" },
-                    { round: 15, opponent: "Willem II", venue: "uit" },
-                    { round: 16, opponent: "FC Groningen", venue: "uit" },
-                    { round: 17, opponent: "FC Twente", venue: "thuis" },
-                    { round: 18, opponent: "PSV", venue: "thuis" },
-                    { round: 19, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 20, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 21, opponent: "AZ", venue: "uit" },
-                    { round: 22, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 23, opponent: "Telstar", venue: "thuis" },
-                    { round: 24, opponent: "Ajax", venue: "uit" },
-                    { round: 25, opponent: "sc Heerenveen", venue: "thuis" },
-                    { round: 26, opponent: "Go Ahead Eagles", venue: "uit" },
-                    { round: 27, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 28, opponent: "Fortuna Sittard", venue: "uit" },
-                    { round: 29, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 30, opponent: "Sparta Rotterdam", venue: "thuis" },
-                    { round: 31, opponent: "Willem II", venue: "thuis" },
-                    { round: 32, opponent: "FC Utrecht", venue: "uit" },
-                    { round: 33, opponent: "FC Twente", venue: "uit" },
-                    { round: 34, opponent: "FC Groningen", venue: "thuis" }
+                    { round: 9, opponent: "Telstar", venue: "uit" },[span_16](start_span)[span_16](end_span)
+                    { round: 10, opponent: "PSV", venue: "uit" },[span_17](start_span)[span_17](end_span)
+                    { round: 11, opponent: "Fortuna Sittard", venue: "thuis" },[span_18](start_span)[span_18](end_span)
+                    { round: 12, opponent: "sc Heerenveen", venue: "uit" },[span_19](start_span)[span_19](end_span)
+                    { round: 13, opponent: "Excelsior Rotterdam", venue: "uit" },[span_20](start_span)[span_20](end_span)
+                    { round: 14, opponent: "Ajax", venue: "thuis" },[span_21](start_span)[span_21](end_span)
+                    { round: 15, opponent: "Willem II", venue: "uit" },[span_22](start_span)[span_22](end_span)
+                    { round: 16, opponent: "FC Groningen", venue: "uit" },[span_23](start_span)[span_23](end_span)
+                    { round: 17, opponent: "FC Twente", venue: "thuis" },[span_24](start_span)[span_24](end_span)
+                    { round: 18, opponent: "PSV", venue: "thuis" },[span_25](start_span)[span_25](end_span)
+                    { round: 19, opponent: "FC Twente", venue: "uit" },[span_26](start_span)[span_26](end_span)
+                    { round: 20, opponent: "PEC Zwolle", venue: "thuis" },[span_27](start_span)[span_27](end_span)
+                    { round: 21, opponent: "AZ", venue: "uit" },[span_28](start_span)[span_28](end_span)
+                    { round: 22, opponent: "N.E.C.", venue: "thuis" },[span_29](start_span)[span_29](end_span)
+                    { round: 23, opponent: "Telstar", venue: "thuis" },[span_30](start_span)[span_30](end_span)
+                    { round: 24, opponent: "Ajax", venue: "uit" },[span_31](start_span)[span_31](end_span)
+                    { round: 25, opponent: "sc Heerenveen", venue: "thuis" },[span_32](start_span)[span_32](end_span)
+                    { round: 26, opponent: "Go Ahead Eagles", venue: "uit" },[span_33](start_span)[span_33](end_span)
+                    { round: 27, opponent: "SC Cambuur", venue: "thuis" },[span_34](start_span)[span_34](end_span)
+                    { round: 28, opponent: "Fortuna Sittard", venue: "uit" },[span_35](start_span)[span_35](end_span)
+                    { round: 29, opponent: "ADO Den Haag", venue: "uit" },[span_36](start_span)[span_36](end_span)
+                    { round: 30, opponent: "Sparta Rotterdam", venue: "thuis" },[span_37](start_span)[span_37](end_span)
+                    { round: 31, opponent: "Willem II", venue: "thuis" },[span_38](start_span)[span_38](end_span)
+                    { round: 32, opponent: "FC Utrecht", venue: "uit" },[span_39](start_span)[span_39](end_span)
+                    { round: 33, opponent: "FC Twente", venue: "uit" },[span_40](start_span)[span_40](end_span)
+                    { round: 34, opponent: "FC Groningen", venue: "thuis" }[span_41](start_span)[span_41](end_span)
                 ]
             },
             psv: {
                 name: "PSV",
-                basePoints: 19,
+                basePoints: 19,[span_42](start_span)[span_42](end_span)
                 badge: "bg-red-800 text-white",
                 matches: [
-                    { round: 9, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 10, opponent: "Feyenoord", venue: "thuis" },
-                    { round: 11, opponent: "Willem II", venue: "thuis" },
-                    { round: 12, opponent: "SC Cambuur", venue: "uit" },
-                    { round: 13, opponent: "N.E.C.", venue: "uit" },
-                    { round: 14, opponent: "Go Ahead Eagles", venue: "thuis" },
-                    { round: 15, opponent: "AZ", venue: "uit" },
-                    { round: 16, opponent: "Telstar", venue: "thuis" },
-                    { round: 17, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 18, opponent: "Feyenoord", venue: "uit" },
-                    { round: 19, opponent: "Fortuna Sittard", venue: "uit" },
-                    { round: 20, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 21, opponent: "Willem II", venue: "uit" },
-                    { round: 22, opponent: "FC Twente", venue: "thuis" },
-                    { round: 23, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 24, opponent: "Sparta Rotterdam", venue: "uit" },
-                    { round: 25, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 26, opponent: "Telstar", venue: "uit" },
-                    { round: 27, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 28, opponent: "AZ", venue: "thuis" },
-                    { round: 29, opponent: "PEC Zwolle", venue: "uit" },
-                    { round: 30, opponent: "Ajax", venue: "thuis" },
-                    { round: 31, opponent: "Go Ahead Eagles", venue: "thuis" },
-                    { round: 32, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 33, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 34, opponent: "sc Heerenveen", venue: "uit" }
+                    { round: 9, opponent: "ADO Den Haag", venue: "uit" },[span_43](start_span)[span_43](end_span)
+                    { round: 10, opponent: "Feyenoord", venue: "thuis" },[span_44](start_span)[span_44](end_span)
+                    { round: 11, opponent: "Willem II", venue: "thuis" },[span_45](start_span)[span_45](end_span)
+                    { round: 12, opponent: "SC Cambuur", venue: "uit" },[span_46](start_span)[span_46](end_span)
+                    { round: 13, opponent: "N.E.C.", venue: "uit" },[span_47](start_span)[span_47](end_span)
+                    { round: 14, opponent: "Go Ahead Eagles", venue: "thuis" },[span_48](start_span)[span_48](end_span)
+                    { round: 15, opponent: "AZ", venue: "uit" },[span_49](start_span)[span_49](end_span)
+                    { round: 16, opponent: "Telstar", venue: "thuis" },[span_50](start_span)[span_50](end_span)
+                    { round: 17, opponent: "PEC Zwolle", venue: "thuis" },[span_51](start_span)[span_51](end_span)
+                    { round: 18, opponent: "Feyenoord", venue: "uit" },[span_52](start_span)[span_52](end_span)
+                    { round: 19, opponent: "Fortuna Sittard", venue: "uit" },[span_53](start_span)[span_53](end_span)
+                    { round: 20, opponent: "N.E.C.", venue: "thuis" },[span_54](start_span)[span_54](end_span)
+                    { round: 21, opponent: "Willem II", venue: "uit" },[span_55](start_span)[span_55](end_span)
+                    { round: 22, opponent: "FC Twente", venue: "thuis" },[span_56](start_span)[span_56](end_span)
+                    { round: 23, opponent: "SC Cambuur", venue: "thuis" },[span_57](start_span)[span_57](end_span)
+                    { round: 24, opponent: "Sparta Rotterdam", venue: "uit" },[span_58](start_span)[span_58](end_span)
+                    { round: 25, opponent: "PEC Zwolle", venue: "thuis" },[span_59](start_span)[span_59](end_span)
+                    { round: 26, opponent: "Telstar", venue: "uit" },[span_60](start_span)[span_60](end_span)
+                    { round: 27, opponent: "FC Groningen", venue: "thuis" },[span_61](start_span)[span_61](end_span)
+                    { round: 28, opponent: "AZ", venue: "thuis" },[span_62](start_span)[span_62](end_span)
+                    { round: 29, opponent: "PEC Zwolle", venue: "uit" },[span_63](start_span)[span_63](end_span)
+                    { round: 30, opponent: "Ajax", venue: "thuis" },[span_64](start_span)[span_64](end_span)
+                    { round: 31, opponent: "Go Ahead Eagles", venue: "thuis" },[span_65](start_span)[span_65](end_span)
+                    { round: 32, opponent: "FC Groningen", venue: "thuis" },[span_66](start_span)[span_66](end_span)
+                    { round: 33, opponent: "N.E.C.", venue: "thuis" },[span_67](start_span)[span_67](end_span)
+                    { round: 34, opponent: "sc Heerenveen", venue: "uit" }[span_68](start_span)[span_68](end_span)
                 ]
             },
             az: {
                 name: "AZ",
-                basePoints: 19,
+                basePoints: 19,[span_69](start_span)[span_69](end_span)
                 badge: "bg-red-500 text-white",
                 matches: [
-                    { round: 9, opponent: "SC Cambuur", venue: "uit" },
-                    { round: 10, opponent: "FC Twente", venue: "thuis" },
-                    { round: 11, opponent: "Ajax", venue: "uit" },
-                    { round: 12, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 13, opponent: "Sparta Rotterdam", venue: "uit" },
-                    { round: 14, opponent: "PEC Zwolle", venue: "uit" },
-                    { round: 15, opponent: "PSV", venue: "thuis" },
-                    { round: 16, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 17, opponent: "Excelsior Rotterdam", venue: "thuis" },
-                    { round: 18, opponent: "sc Heerenveen", venue: "thuis" },
-                    { round: 19, opponent: "Go Ahead Eagles", venue: "uit" },
-                    { round: 20, opponent: "FC Utrecht", venue: "thuis" },
-                    { round: 21, opponent: "Feyenoord", venue: "thuis" },
-                    { round: 22, opponent: "FC Groningen", venue: "uit" },
-                    { round: 23, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 24, opponent: "AZ", venue: "uit" },
-                    { round: 25, opponent: "FC Twente", venue: "uit" },
-                    { round: 26, opponent: "Sparta Rotterdam", venue: "thuis" },
-                    { round: 27, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 28, opponent: "PSV", venue: "uit" },
-                    { round: 29, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 30, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 31, opponent: "Telstar", venue: "uit" },
-                    { round: 32, opponent: "Ajax", venue: "thuis" },
-                    { round: 33, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 34, opponent: "ADO Den Haag", venue: "uit" }
+                    { round: 9, opponent: "SC Cambuur", venue: "uit" },[span_70](start_span)[span_70](end_span)
+                    { round: 10, opponent: "FC Twente", venue: "thuis" },[span_71](start_span)[span_71](end_span)
+                    { round: 11, opponent: "Ajax", venue: "uit" },[span_72](start_span)[span_72](end_span)
+                    { round: 12, opponent: "FC Groningen", venue: "thuis" },[span_73](start_span)[span_73](end_span)
+                    { round: 13, opponent: "Sparta Rotterdam", venue: "uit" },[span_74](start_span)[span_74](end_span)
+                    { round: 14, opponent: "PEC Zwolle", venue: "uit" },[span_75](start_span)[span_75](end_span)
+                    { round: 15, opponent: "PSV", venue: "thuis" },[span_76](start_span)[span_76](end_span)
+                    { round: 16, opponent: "N.E.C.", venue: "thuis" },[span_77](start_span)[span_77](end_span)
+                    { round: 17, opponent: "Excelsior Rotterdam", venue: "thuis" },[span_78](start_span)[span_78](end_span)
+                    { round: 18, opponent: "sc Heerenveen", venue: "thuis" },[span_79](start_span)[span_79](end_span)
+                    { round: 19, opponent: "Go Ahead Eagles", venue: "uit" },[span_80](start_span)[span_80](end_span)
+                    { round: 20, opponent: "FC Utrecht", venue: "thuis" },[span_81](start_span)[span_81](end_span)
+                    { round: 21, opponent: "Feyenoord", venue: "thuis" },[span_82](start_span)[span_82](end_span)
+                    { round: 22, opponent: "FC Groningen", venue: "uit" },[span_83](start_span)[span_83](end_span)
+                    { round: 23, opponent: "Fortuna Sittard", venue: "thuis" },[span_84](start_span)[span_84](end_span)
+                    { round: 24, opponent: "FC Utrecht", venue: "uit" },[span_85](start_span)[span_85](end_span)
+                    { round: 25, opponent: "FC Twente", venue: "uit" },[span_86](start_span)[span_86](end_span)
+                    { round: 26, opponent: "Sparta Rotterdam", venue: "thuis" },[span_87](start_span)[span_87](end_span)
+                    { round: 27, opponent: "Excelsior Rotterdam", venue: "uit" },[span_88](start_span)[span_88](end_span)
+                    { round: 28, opponent: "PSV", venue: "uit" },[span_89](start_span)[span_89](end_span)
+                    { round: 29, opponent: "SC Cambuur", venue: "thuis" },[span_90](start_span)[span_90](end_span)
+                    { round: 30, opponent: "SC Cambuur", venue: "thuis" },[span_91](start_span)[span_91](end_span)
+                    { round: 31, opponent: "Telstar", venue: "uit" },[span_92](start_span)[span_92](end_span)
+                    { round: 32, opponent: "Ajax", venue: "thuis" },[span_93](start_span)[span_93](end_span)
+                    { round: 33, opponent: "PEC Zwolle", venue: "thuis" },[span_94](start_span)[span_94](end_span)
+                    { round: 34, opponent: "ADO Den Haag", venue: "uit" }[span_95](start_span)[span_95](end_span)
                 ]
             },
             ajax: {
                 name: "Ajax",
-                basePoints: 15,
+                basePoints: 15,[span_96](start_span)[span_96](end_span)
                 badge: "bg-red-700 text-white",
                 matches: [
-                    { round: 9, opponent: "FC Groningen", venue: "uit" },
-                    { round: 10, opponent: "Sparta Rotterdam", venue: "uit" },
-                    { round: 11, opponent: "AZ", venue: "thuis" },
-                    { round: 12, opponent: "FC Twente", venue: "uit" },
-                    { round: 13, opponent: "ADO Den Haag", venue: "thuis" },
-                    { round: 14, opponent: "Feyenoord", venue: "uit" },
-                    { round: 15, opponent: "FC Utrecht", venue: "thuis" },
-                    { round: 16, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 17, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 18, opponent: "ADO Den Haag", venue: "thuis" },
-                    { round: 19, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 20, opponent: "Telstar", venue: "thuis" },
-                    { round: 21, opponent: "sc Heerenveen", venue: "uit" },
-                    { round: 22, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 23, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 24, opponent: "Feyenoord", venue: "thuis" },
-                    { round: 25, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 26, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 27, opponent: "N.E.C.", venue: "uit" },
-                    { round: 28, opponent: "Excelsior Rotterdam", venue: "thuis" },
-                    { round: 29, opponent: "FC Utrecht", venue: "uit" },
-                    { round: 30, opponent: "PSV", venue: "uit" },
-                    { round: 31, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 32, opponent: "AZ", venue: "uit" },
-                    { round: 33, opponent: "Sparta Rotterdam", venue: "thuis" },
-                    { round: 34, opponent: "SC Cambuur", venue: "uit" }
+                    { round: 9, opponent: "FC Groningen", venue: "uit" },[span_97](start_span)[span_97](end_span)
+                    { round: 10, opponent: "Sparta Rotterdam", venue: "uit" },[span_98](start_span)[span_98](end_span)
+                    { round: 11, opponent: "AZ", venue: "thuis" },[span_99](start_span)[span_99](end_span)
+                    { round: 12, opponent: "FC Twente", venue: "uit" },[span_100](start_span)[span_100](end_span)
+                    { round: 13, opponent: "ADO Den Haag", venue: "thuis" },[span_101](start_span)[span_101](end_span)
+                    { round: 14, opponent: "Feyenoord", venue: "uit" },[span_102](start_span)[span_102](end_span)
+                    { round: 15, opponent: "FC Utrecht", venue: "thuis" },[span_103](start_span)[span_103](end_span)
+                    { round: 16, opponent: "SC Cambuur", venue: "thuis" },[span_104](start_span)[span_104](end_span)
+                    { round: 17, opponent: "ADO Den Haag", venue: "uit" },[span_105](start_span)[span_105](end_span)
+                    { round: 18, opponent: "ADO Den Haag", venue: "thuis" },[span_106](start_span)[span_106](end_span)
+                    { round: 19, opponent: "FC Groningen", venue: "thuis" },[span_107](start_span)[span_107](end_span)
+                    { round: 20, opponent: "Telstar", venue: "thuis" },[span_108](start_span)[span_108](end_span)
+                    { round: 21, opponent: "sc Heerenveen", venue: "uit" },[span_109](start_span)[span_109](end_span)
+                    { round: 22, opponent: "Excelsior Rotterdam", venue: "uit" },[span_110](start_span)[span_110](end_span)
+                    { round: 23, opponent: "Fortuna Sittard", venue: "thuis" },[span_111](start_span)[span_111](end_span)
+                    { round: 24, opponent: "Feyenoord", venue: "thuis" },[span_112](start_span)[span_112](end_span)
+                    { round: 25, opponent: "ADO Den Haag", venue: "uit" },[span_113](start_span)[span_113](end_span)
+                    { round: 26, opponent: "PEC Zwolle", venue: "thuis" },[span_114](start_span)[span_114](end_span)
+                    { round: 27, opponent: "N.E.C.", venue: "uit" },[span_115](start_span)[span_115](end_span)
+                    { round: 28, opponent: "Excelsior Rotterdam", venue: "thuis" },[span_116](start_span)[span_116](end_span)
+                    { round: 29, opponent: "FC Utrecht", venue: "uit" },[span_117](start_span)[span_117](end_span)
+                    { round: 30, opponent: "PSV", venue: "uit" },[span_118](start_span)[span_118](end_span)
+                    { round: 31, opponent: "Fortuna Sittard", venue: "thuis" },[span_119](start_span)[span_119](end_span)
+                    { round: 32, opponent: "AZ", venue: "uit" },[span_120](start_span)[span_120](end_span)
+                    { round: 33, opponent: "Sparta Rotterdam", venue: "thuis" },[span_121](start_span)[span_121](end_span)
+                    { round: 34, opponent: "SC Cambuur", venue: "uit" }[span_122](start_span)[span_122](end_span)
                 ]
             }
         };
