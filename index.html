@@ -1,307 +1,142 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eredivisie 2026/27 - Kampioensvoorspeller</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wie wordt kampioen? Eredivisie 2026/27</title>
+<style>
+:root{--ink:#1c1f23;--mute:#5b6270;--line:#e3e5e9;--soft:#f5f5f7;--c:#E2001A;--c2:#111;--tint:#e2001a12}
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:var(--ink);font:15px/1.45 "Avenir Next","Segoe UI",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:28px 16px 56px}
+h1{font:700 26px/1.15 Georgia,"Times New Roman",serif;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 22px}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:22px}
+.card{border:1px solid var(--line);border-top:4px solid var(--c);border-radius:6px;padding:10px 10px 9px;background:#fff;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.card .n{font-weight:600}
+.card .p{font:700 24px/1.1 Georgia,serif;margin-top:2px}
+.card .m{font-size:12.5px;color:var(--mute)}
+.card.lead{background:linear-gradient(#fff,var(--tint))}
+.card.lead .m{color:#1c1f23;font-weight:700}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tab{border:0;background:none;font:600 15px inherit;font-family:inherit;padding:10px 12px;color:var(--mute);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tab[aria-current=true]{color:var(--ink);border-bottom-color:var(--c)}
+.bar{height:5px;background:linear-gradient(90deg,var(--c) 0 75%,var(--c2) 75% 100%)}
+table{width:100%;border-collapse:collapse}
+th{font-weight:600;font-size:13px;color:var(--mute);text-align:left;padding:10px 8px;background:var(--tint);border-bottom:1px solid var(--line)}
+td,tbody th{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:middle;text-align:left}
+tbody th{font-size:15px;color:var(--ink);background:none}
+td.r{color:var(--mute);width:30px}
+th.o .dt{display:block;color:var(--mute);font-weight:400;font-size:12.5px}
+.wrap{overflow-x:auto}
+.sum>*,.foot>*{min-width:0}
+th.o{overflow-wrap:anywhere}
+th.o b{font-weight:600}
+th.o small{color:var(--mute);font-weight:400;margin-left:4px;font-size:13px}
+th.o small.tag{display:inline-block;margin:0 0 0 4px;padding:0 5px;border:1px solid var(--mute);border-radius:3px;font-size:11.5px;color:var(--ink)}
+td.t{text-align:right;font-weight:700;width:48px;font-variant-numeric:tabular-nums}
+tr.duel td,tr.duel th{background:var(--soft)}
+tr.start th{font-weight:700;border-bottom:2px solid var(--line)}
+tr.start td{font-weight:700;border-bottom:2px solid var(--line)}
+.pick{display:flex;gap:4px}
+.pick button{min-width:40px;min-height:36px;padding:6px 0;border:1px solid #9aa0ab;border-radius:5px;background:#fff;font:600 13px inherit;font-family:inherit;color:var(--ink);cursor:pointer}
+.pick button:hover{border-color:var(--c)}
+.pick button[aria-pressed=true]{background:var(--c);border-color:var(--c);color:#fff;font-weight:700}
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;color:var(--mute);font-size:13.5px}
+.reset{border:1px solid #9aa0ab;background:#fff;border-radius:5px;padding:8px 12px;font:inherit;color:var(--ink);cursor:pointer}
+.reset:hover{border-color:var(--ink)}
+button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
+@media(max-width:520px){main{padding:20px 12px 40px}.sum{grid-template-columns:repeat(2,1fr)}td,tbody th,th{padding:7px 4px}tbody th{font-size:14px}.pick button{min-width:32px}.pick{gap:3px}td.t{width:38px}.foot{flex-direction:column;align-items:flex-start}}
+@media(max-width:360px){.pick button{min-width:29px;font-size:12px}}
+</style>
 </head>
-<body class="bg-white text-gray-900 font-sans min-h-screen flex flex-col">
-
-    <!-- Header -->
-    <header class="bg-gray-100 border-b border-gray-200 py-4 px-6 sticky top-0 z-50" role="banner">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <h1 class="text-xl font-bold tracking-tight">Eredivisie Voorspeller <span class="text-xs bg-red-600 text-white px-2 py-0.5 rounded-full uppercase">2026/27</span></h1>
-                <p class="text-xs text-gray-500">Feyenoord, AZ, Ajax & PSV - Officieel KNVB Schema</p>
-            </div>
-            
-            <div class="flex items-center gap-3">
-                <label for="username" class="sr-only">Jouw naam voor opslaan</label>
-                <input type="text" id="username" placeholder="Jouw naam..." class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="savePredictions()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-sm font-medium transition cursor-pointer" aria-label="Sla alle voorspellingen op onder je ingevoerde naam">Opslaan</button>
-                <button onclick="resetData()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-lg text-sm transition cursor-pointer" aria-label="Wis alle opgeslagen voorspellingen">Wissen</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Virtuele Stand & Kampioen Banner -->
-    <section class="bg-gray-50 border-b border-gray-200 py-6 px-6" aria-labelledby="standings-heading">
-        <div class="max-w-7xl mx-auto">
-            <h2 id="standings-heading" class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3">Virtuele Stand (Inclusief huidige stand t/m R8)</h2>
-            <div id="standings" class="grid grid-cols-2 md:grid-cols-4 gap-4" aria-live="polite" aria-atomic="true">
-                <!-- Wordt dynamisch gevuld -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content: 4 Club Kolommen -->
-    <main class="max-w-7xl mx-auto px-6 py-8 flex-grow w-full" role="main">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="club-columns">
-            <!-- Wordt dynamisch gevuld -->
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-50 border-t border-gray-200 py-4 text-center text-xs text-gray-500" role="contentinfo">
-        Officiële KNVB Eredivisie 2026/27 speelschema's • Geactualiseerd t/m speelronde 8 • Volledig toegankelijk
-    </footer>
-
-    <script>
-        const clubData = {
-            feyenoord: {
-                name: "Feyenoord",
-                basePoints: 20,
-                badge: "bg-red-600 text-white",
-                matches: [
-                    { round: 9, opponent: "Telstar", venue: "uit" },
-                    { round: 10, opponent: "PSV", venue: "uit" },
-                    { round: 11, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 12, opponent: "sc Heerenveen", venue: "uit" },
-                    { round: 13, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 14, opponent: "Ajax", venue: "thuis" },
-                    { round: 15, opponent: "Willem II", venue: "uit" },
-                    { round: 16, opponent: "FC Groningen", venue: "uit" },
-                    { round: 17, opponent: "FC Twente", venue: "thuis" },
-                    { round: 18, opponent: "PSV", venue: "thuis" },
-                    { round: 19, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 20, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 21, opponent: "AZ", venue: "uit" },
-                    { round: 22, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 23, opponent: "Telstar", venue: "thuis" },
-                    { round: 24, opponent: "Ajax", venue: "uit" },
-                    { round: 25, opponent: "sc Heerenveen", venue: "thuis" },
-                    { round: 26, opponent: "Go Ahead Eagles", venue: "uit" },
-                    { round: 27, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 28, opponent: "Fortuna Sittard", venue: "uit" },
-                    { round: 29, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 30, opponent: "Sparta Rotterdam", venue: "thuis" },
-                    { round: 31, opponent: "Willem II", venue: "thuis" },
-                    { round: 32, opponent: "FC Utrecht", venue: "uit" },
-                    { round: 33, opponent: "FC Twente", venue: "uit" },
-                    { round: 34, opponent: "FC Groningen", venue: "thuis" }
-                ]
-            },
-            psv: {
-                name: "PSV",
-                basePoints: 19,
-                badge: "bg-red-800 text-white",
-                matches: [
-                    { round: 9, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 10, opponent: "Feyenoord", venue: "thuis" },
-                    { round: 11, opponent: "Willem II", venue: "thuis" },
-                    { round: 12, opponent: "SC Cambuur", venue: "uit" },
-                    { round: 13, opponent: "N.E.C.", venue: "uit" },
-                    { round: 14, opponent: "Go Ahead Eagles", venue: "thuis" },
-                    { round: 15, opponent: "AZ", venue: "uit" },
-                    { round: 16, opponent: "Telstar", venue: "thuis" },
-                    { round: 17, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 18, opponent: "Feyenoord", venue: "uit" },
-                    { round: 19, opponent: "Fortuna Sittard", venue: "uit" },
-                    { round: 20, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 21, opponent: "Willem II", venue: "uit" },
-                    { round: 22, opponent: "FC Twente", venue: "thuis" },
-                    { round: 23, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 24, opponent: "Sparta Rotterdam", venue: "uit" },
-                    { round: 25, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 26, opponent: "Telstar", venue: "uit" },
-                    { round: 27, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 28, opponent: "AZ", venue: "thuis" },
-                    { round: 29, opponent: "PEC Zwolle", venue: "uit" },
-                    { round: 30, opponent: "Ajax", venue: "thuis" },
-                    { round: 31, opponent: "Go Ahead Eagles", venue: "thuis" },
-                    { round: 32, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 33, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 34, opponent: "sc Heerenveen", venue: "uit" }
-                ]
-            },
-            az: {
-                name: "AZ",
-                basePoints: 19,
-                badge: "bg-red-500 text-white",
-                matches: [
-                    { round: 9, opponent: "SC Cambuur", venue: "uit" },
-                    { round: 10, opponent: "FC Twente", venue: "thuis" },
-                    { round: 11, opponent: "Ajax", venue: "uit" },
-                    { round: 12, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 13, opponent: "Sparta Rotterdam", venue: "uit" },
-                    { round: 14, opponent: "PEC Zwolle", venue: "uit" },
-                    { round: 15, opponent: "PSV", venue: "thuis" },
-                    { round: 16, opponent: "N.E.C.", venue: "thuis" },
-                    { round: 17, opponent: "Excelsior Rotterdam", venue: "thuis" },
-                    { round: 18, opponent: "sc Heerenveen", venue: "thuis" },
-                    { round: 19, opponent: "Go Ahead Eagles", venue: "uit" },
-                    { round: 20, opponent: "FC Utrecht", venue: "thuis" },
-                    { round: 21, opponent: "Feyenoord", venue: "thuis" },
-                    { round: 22, opponent: "FC Groningen", venue: "uit" },
-                    { round: 23, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 24, opponent: "FC Utrecht", venue: "uit" },
-                    { round: 25, opponent: "FC Twente", venue: "uit" },
-                    { round: 26, opponent: "Sparta Rotterdam", venue: "thuis" },
-                    { round: 27, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 28, opponent: "PSV", venue: "uit" },
-                    { round: 29, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 30, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 31, opponent: "Telstar", venue: "uit" },
-                    { round: 32, opponent: "Ajax", venue: "thuis" },
-                    { round: 33, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 34, opponent: "ADO Den Haag", venue: "uit" }
-                ]
-            },
-            ajax: {
-                name: "Ajax",
-                basePoints: 15,
-                badge: "bg-red-700 text-white",
-                matches: [
-                    { round: 9, opponent: "FC Groningen", venue: "uit" },
-                    { round: 10, opponent: "Sparta Rotterdam", venue: "uit" },
-                    { round: 11, opponent: "AZ", venue: "thuis" },
-                    { round: 12, opponent: "FC Twente", venue: "uit" },
-                    { round: 13, opponent: "ADO Den Haag", venue: "thuis" },
-                    { round: 14, opponent: "Feyenoord", venue: "uit" },
-                    { round: 15, opponent: "FC Utrecht", venue: "thuis" },
-                    { round: 16, opponent: "SC Cambuur", venue: "thuis" },
-                    { round: 17, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 18, opponent: "ADO Den Haag", venue: "thuis" },
-                    { round: 19, opponent: "FC Groningen", venue: "thuis" },
-                    { round: 20, opponent: "Telstar", venue: "thuis" },
-                    { round: 21, opponent: "sc Heerenveen", venue: "uit" },
-                    { round: 22, opponent: "Excelsior Rotterdam", venue: "uit" },
-                    { round: 23, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 24, opponent: "Feyenoord", venue: "thuis" },
-                    { round: 25, opponent: "ADO Den Haag", venue: "uit" },
-                    { round: 26, opponent: "PEC Zwolle", venue: "thuis" },
-                    { round: 27, opponent: "N.E.C.", venue: "uit" },
-                    { round: 28, opponent: "Excelsior Rotterdam", venue: "thuis" },
-                    { round: 29, opponent: "FC Utrecht", venue: "uit" },
-                    { round: 30, opponent: "PSV", venue: "uit" },
-                    { round: 31, opponent: "Fortuna Sittard", venue: "thuis" },
-                    { round: 32, opponent: "AZ", venue: "uit" },
-                    { round: 33, opponent: "Sparta Rotterdam", venue: "thuis" },
-                    { round: 34, opponent: "SC Cambuur", venue: "uit" }
-                ]
-            }
-        };
-
-        let userPredictions = JSON.parse(localStorage.getItem('eredivisie_predictions')) || {};
-        let currentUsername = localStorage.getItem('eredivisie_username') || '';
-
-        document.getElementById('username').value = currentUsername;
-
-        function renderApp() {
-            const columnsContainer = document.getElementById('club-columns');
-            columnsContainer.innerHTML = '';
-
-            let totals = {};
-
-            for (const [clubKey, clubObj] of Object.entries(clubData)) {
-                totals[clubKey] = clubObj.basePoints;
-                clubObj.matches.forEach((match, index) => {
-                    const key = `${clubKey}_${index}`;
-                    const pts = userPredictions[key] !== undefined ? parseInt(userPredictions[key]) : 0;
-                    totals[clubKey] += pts;
-                });
-            }
-
-            const sortedStandings = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-
-            const standingsContainer = document.getElementById('standings');
-            standingsContainer.innerHTML = '';
-            sortedStandings.forEach(([clubKey, points], index) => {
-                const club = clubData[clubKey];
-                const isLeader = index === 0;
-                standingsContainer.innerHTML += `
-                    <div class="bg-white border ${isLeader ? 'border-blue-500 ring-2 ring-blue-100' : 'border-gray-200'} rounded-xl p-4 flex items-center justify-between shadow-2xs">
-                        <div>
-                            <span class="text-xs font-bold text-gray-400">Plaats ${index + 1}</span>
-                            <h3 class="font-bold text-gray-800">${club.name}</h3>
-                            ${isLeader ? '<span class="text-[10px] bg-blue-100 text-blue-700 font-semibold px-1.5 py-0.5 rounded">Virtueel Kampioen</span>' : ''}
-                        </div>
-                        <div class="text-2xl font-black text-gray-900" aria-label="${club.name} heeft ${points} punten">${points} <span class="text-xs font-normal text-gray-500">pt</span></div>
-                    </div>
-                `;
-            });
-
-            for (const [clubKey, clubObj] of Object.entries(clubData)) {
-                let matchesHTML = '';
-                clubObj.matches.forEach((match, index) => {
-                    const key = `${clubKey}_${index}`;
-                    const currentVal = userPredictions[key] !== undefined ? userPredictions[key] : "";
-
-                    const is3Active = currentVal == 3;
-                    const is1Active = currentVal == 1;
-                    const is0Active = currentVal === 0 && currentVal !== "";
-
-                    matchesHTML += `
-                        <div class="bg-white border border-gray-100 rounded-lg p-2.5 flex items-center justify-between text-xs shadow-2xs">
-                            <div>
-                                <span class="font-semibold text-gray-400 mr-1">Ronde ${match.round}</span>
-                                <span class="text-gray-700">${match.venue === 'thuis' ? 'Thuis tegen' : 'Uit tegen'} ${match.opponent}</span>
-                            </div>
-                            <div class="flex gap-1" role="group" aria-label="Voorspelling voor ${clubObj.name} tegen ${match.opponent}">
-                                <button onclick="setPoints('${key}', 3)" 
-                                    aria-pressed="${is3Active}" 
-                                    aria-label="3 punten (winst) voor ${clubObj.name} in speelronde ${match.round} tegen ${match.opponent}"
-                                    class="px-2 py-1 rounded text-[11px] font-medium transition cursor-pointer ${is3Active ? 'bg-green-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}">+3</button>
-                                <button onclick="setPoints('${key}', 1)" 
-                                    aria-pressed="${is1Active}" 
-                                    aria-label="1 punt (gelijkspel) voor ${clubObj.name} in speelronde ${match.round} tegen ${match.opponent}"
-                                    class="px-2 py-1 rounded text-[11px] font-medium transition cursor-pointer ${is1Active ? 'bg-amber-500 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}">+1</button>
-                                <button onclick="setPoints('${key}', 0)" 
-                                    aria-pressed="${is0Active}" 
-                                    aria-label="0 punten (verlies) voor ${clubObj.name} in speelronde ${match.round} tegen ${match.opponent}"
-                                    class="px-2 py-1 rounded text-[11px] font-medium transition cursor-pointer ${is0Active ? 'bg-red-600 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'}">0</button>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                columnsContainer.innerHTML += `
-                    <section aria-labelledby="heading-${clubKey}" class="border border-gray-200 rounded-xl bg-gray-50/50 flex flex-col overflow-hidden shadow-2xs">
-                        <div class="p-3 border-b border-gray-200 bg-white flex justify-between items-center">
-                            <div>
-                                <h3 id="heading-${clubKey}" class="font-bold text-gray-800">${clubObj.name}</h3>
-                                <span class="text-[10px] text-gray-400">Start: ${clubObj.basePoints} pt</span>
-                            </div>
-                            <span class="text-xs font-bold px-2 py-0.5 rounded ${clubObj.badge}" aria-label="Totaal ${totals[clubKey]} punten">${totals[clubKey]} pt</span>
-                        </div>
-                        <div class="p-3 flex flex-col gap-2 max-h-[600px] overflow-y-auto" role="region" aria-label="Speelschema van ${clubObj.name}">
-                            ${matchesHTML}
-                        </div>
-                    </section>
-                `;
-            }
-        }
-
-        function setPoints(key, points) {
-            if (userPredictions[key] === points) {
-                delete userPredictions[key];
-            } else {
-                userPredictions[key] = points;
-            }
-            renderApp();
-        }
-
-        function savePredictions() {
-            const nameInput = document.getElementById('username').value.trim();
-            if (!nameInput) {
-                alert("Vul eerst even je naam in!");
-                return;
-            }
-            localStorage.setItem('eredivisie_username', nameInput);
-            localStorage.setItem('eredivisie_predictions', JSON.stringify(userPredictions));
-            alert(`Voorspellingen succesvol opgeslagen voor ${nameInput}!`);
-        }
-
-        function resetData() {
-            if (confirm("Weet je zeker dat je alle voorspellingen wilt wissen?")) {
-                userPredictions = {};
-                localStorage.removeItem('eredivisie_predictions');
-                renderApp();
-            }
-        }
-
-        renderApp();
-    </script>
+<body>
+<main>
+<h1>Wie wordt kampioen?</h1>
+<p class="sub">Eredivisie 2026/27. Vul per wedstrijd 3, 1 of 0 punten in. De stand is bijgewerkt na speelronde 8.</p>
+<h2 class="sr">Verwachte stand van de vier clubs</h2>
+<div class="sum" id="sum"></div>
+<nav aria-label="Kies een club"><div class="tabs" id="tabs"></div></nav>
+<div class="bar"></div>
+<div class="wrap"><table>
+<caption class="sr" id="cap"></caption>
+<thead><tr><th scope="col">Ronde</th><th scope="col">Tegenstander</th><th scope="col">Uitslag</th><th scope="col" style="text-align:right">Totaal</th></tr></thead>
+<tbody id="rows"></tbody>
+</table></div>
+<div class="foot"><span id="cnt"></span><button class="reset" id="reset" type="button">Wis dit team</button></div>
+<p class="sub" style="margin-top:18px;font-size:13.5px">Duels tussen de vier clubs hebben het label onderling duel en een grijze achtergrond. Kies je bij het ene team 3 punten, dan krijgt de tegenstander automatisch 0 (en bij een gelijkspel krijgen beide 1 punt). Je invoer blijft bewaard in je browser.</p>
+<div id="live" class="sr" aria-live="polite" role="status"></div>
+</main>
+<script>
+const CLUBS={
+ Feyenoord:{now:20,c:"#E2001A",c2:"#111111",opp:"Telstar:a,PSV:a,Fortuna Sittard:h,Heerenveen:a,Excelsior:h,Ajax:h,Willem II:a,Groningen:a,Twente:h,PSV:h,Excelsior:a,PEC Zwolle:h,AZ:a,NEC:h,Telstar:h,Ajax:a,Heerenveen:h,Go Ahead:a,Cambuur:h,Fortuna Sittard:a,ADO:a,Sparta:h,Willem II:h,Utrecht:a,Twente:a,Groningen:h"},
+ Ajax:{now:15,c:"#D2122E",c2:"#b9bcc2",opp:"Groningen:a,Sparta:a,AZ:h,Twente:a,ADO:h,Feyenoord:a,Utrecht:h,Cambuur:h,Go Ahead:a,Willem II:a,Groningen:h,Telstar:h,Heerenveen:a,Excelsior:a,Go Ahead:h,Feyenoord:h,ADO:a,PEC Zwolle:h,NEC:a,Twente:h,Utrecht:a,PSV:a,Fortuna Sittard:h,AZ:a,Sparta:h,Cambuur:a"},
+ PSV:{now:19,c:"#D9141C",c2:"#2b2f36",opp:"ADO:a,Feyenoord:h,Willem II:h,Cambuur:a,NEC:a,Go Ahead:h,AZ:a,Telstar:h,PEC Zwolle:h,Feyenoord:a,Fortuna Sittard:a,ADO:h,Willem II:a,Twente:h,Cambuur:h,Sparta:a,Utrecht:h,Telstar:a,Groningen:a,AZ:h,PEC Zwolle:a,Ajax:h,Go Ahead:a,Excelsior:h,NEC:h,Heerenveen:a"},
+ AZ:{now:19,c:"#C8102E",c2:"#222222",opp:"Cambuur:a,Twente:h,Ajax:a,Groningen:h,Sparta:a,PEC Zwolle:a,PSV:h,NEC:h,Excelsior:a,Heerenveen:h,Go Ahead:a,Utrecht:h,Feyenoord:h,Groningen:a,Fortuna Sittard:h,NEC:a,Twente:a,Sparta:h,Excelsior:h,PSV:a,Willem II:a,Cambuur:h,Telstar:a,Ajax:h,PEC Zwolle:h,ADO:a"}
+};
+const DATES=["16–18 okt","23–25 okt","31 okt–1 nov","6–8 nov","21–22 nov","27–29 nov","4–6 dec","11–13 dec","18–20 dec","8–10 jan","15–17 jan","22–24 jan","29–31 jan","12–14 feb","19–21 feb","26–28 feb","5–7 mrt","12–14 mrt","19–21 mrt","3–4 apr","9–11 apr","23–25 apr","30 apr–2 mei","8–9 mei","16 mei","23 mei"];
+const NAMES=Object.keys(CLUBS), KEY="kampioen-2026-27";
+NAMES.forEach(n=>CLUBS[n].games=CLUBS[n].opp.split(",").map(s=>{const[o,h]=s.split(":");return{o,home:h==="h"}}));
+let S={};NAMES.forEach(n=>S[n]=Array(26).fill(null));
+try{const v=JSON.parse(localStorage.getItem(KEY));if(v)NAMES.forEach(n=>{if(Array.isArray(v[n])&&v[n].length===26)S[n]=v[n]})}catch(e){}
+let cur="Feyenoord",focusSel=null;
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const total=n=>CLUBS[n].now+S[n].reduce((a,b)=>a+(b||0),0);
+const filled=n=>S[n].filter(v=>v!==null).length;
+const mirror=v=>v===3?0:v===0?3:v;
+const pts=x=>x===1?"1 punt":x+" punten";
+function leaderText(){
+ if(!NAMES.some(n=>filled(n)>0))return"";
+ const o=[...NAMES].sort((a,b)=>total(b)-total(a)),t=total(o[0]);
+ const l=o.filter(n=>total(n)===t);
+ return" Koploper: "+l.join(" en ")+" met "+t+" punten.";
+}
+function say(msg){const l=document.getElementById("live");l.textContent="";setTimeout(()=>l.textContent=msg,60)}
+function pick(i,v){
+ const old=S[cur][i],nv=old===v?null:v,g=CLUBS[cur].games[i];
+ S[cur][i]=nv;
+ if(S[g.o])S[g.o][i]=nv===null?null:mirror(nv);
+ save();
+ focusSel=`.pick button[data-i="${i}"][data-v="${v}"]`;
+ render();
+ say(`${cur} ${g.home?"thuis tegen":"uit bij"} ${g.o}, ronde ${i+9}: ${nv===null?"keuze gewist":pts(nv)}. Verwacht totaal ${total(cur)} punten.`+leaderText());
+}
+function theme(n){const c=CLUBS[n],s=document.documentElement.style;s.setProperty("--c",c.c);s.setProperty("--c2",c.c2);s.setProperty("--tint",c.c+"12")}
+function render(){
+ theme(cur);
+ const order=[...NAMES].sort((a,b)=>total(b)-total(a));
+ const top=total(order[0]),anyFilled=NAMES.some(n=>filled(n)>0);
+ document.getElementById("sum").innerHTML=order.map(n=>{
+  const c=CLUBS[n],lead=anyFilled&&total(n)===top;
+  return `<button type="button" class="card${lead?" lead":""}" style="--c:${c.c};--tint:${c.c}14" data-club="${n}" aria-label="${n}: verwacht totaal ${total(n)} punten, ${filled(n)} van 26 wedstrijden ingevuld${lead?", koploper":""}. Open de tabel van ${n}."><div class="n">${n}</div><div class="p">${total(n)}</div><div class="m">${lead?"Koploper":filled(n)+"/26 ingevuld"}</div></button>`}).join("");
+ document.getElementById("tabs").innerHTML=NAMES.map(n=>`<button type="button" class="tab" data-club="${n}" ${n===cur?'aria-current="true"':""}>${n}</button>`).join("");
+ document.getElementById("cap").textContent=`Resterende wedstrijden van ${cur}, ronde 9 tot en met 34`;
+ let run=CLUBS[cur].now;
+ let h=`<tr class="start"><td class="r"></td><th scope="row" class="o">Stand na 8 wedstrijden</th><td></td><td class="t">${run}</td></tr>`;
+ CLUBS[cur].games.forEach((g,i)=>{
+  const v=S[cur][i];run+=v||0;
+  const duel=!!S[g.o];
+  const btns=[3,1,0].map(x=>{
+   const on=v===x;
+   return `<button type="button" data-i="${i}" data-v="${x}" aria-pressed="${on}" aria-label="${cur} ${g.home?"thuis tegen":"uit bij"} ${g.o}, ronde ${i+9}: ${pts(x)}">${on?'<span aria-hidden="true">✓ </span>':""}${x}</button>`}).join("");
+  h+=`<tr class="${duel?"duel":""}"><td class="r">${i+9}</td><th scope="row" class="o"><b>${g.o}</b><small>${g.home?"thuis":"uit"}</small>${duel?'<small class="tag">onderling duel</small>':""}<span class="dt">${DATES[i]}</span></th><td><div class="pick" role="group" aria-label="Uitslag ${cur} tegen ${g.o}, ronde ${i+9}">${btns}</div></td><td class="t">${v===null?'<span aria-hidden="true">–</span><span class="sr">nog niet ingevuld</span>':run}</td></tr>`;
+ });
+ document.getElementById("rows").innerHTML=h;
+ document.getElementById("cnt").textContent=`${filled(cur)} van 26 wedstrijden ingevuld. Maximaal haalbaar: ${CLUBS[cur].now+78} punten.`;
+ if(focusSel){const el=document.querySelector(focusSel);if(el)el.focus();focusSel=null}
+}
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b)return;
+ if(b.dataset.club){cur=b.dataset.club;focusSel=`.tab[data-club="${cur}"]`;render();say(`Tabel van ${cur}. Verwacht totaal ${total(cur)} punten, ${filled(cur)} van 26 wedstrijden ingevuld.`)}
+ else if(b.dataset.i){pick(+b.dataset.i,+b.dataset.v)}
+});
+document.getElementById("reset").onclick=()=>{
+ CLUBS[cur].games.forEach((g,i)=>{if(S[g.o])S[g.o][i]=null});
+ S[cur]=Array(26).fill(null);save();render();
+ say(`Alle keuzes voor ${cur} gewist. Verwacht totaal ${total(cur)} punten.`);
+};
+render();
+</script>
 </body>
 </html>
