@@ -1,0 +1,28 @@
+name: Stand bijwerken
+
+on:
+  schedule:
+    # Maandag 03:00 UTC = 04:00 of 05:00 Nederlandse tijd (nacht van zondag op maandag)
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Stand ophalen en index.html bijwerken
+        run: python scripts/update.py
+      - name: Wijzigingen opslaan
+        run: |
+          if git diff --quiet; then echo "Geen wijzigingen"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Stand bijwerken na speelronde"
+          git push
