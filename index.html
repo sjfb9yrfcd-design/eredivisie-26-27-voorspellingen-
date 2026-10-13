@@ -53,7 +53,7 @@ button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
 <body>
 <main>
 <h1>Wie wordt kampioen?</h1>
-<p class="sub">Eredivisie 2026/27. Vul per wedstrijd 3, 1 of 0 punten in. De stand is bijgewerkt na speelronde 8.</p>
+<p class="sub">Eredivisie 2026/27. Vul per wedstrijd 3, 1 of 0 punten in. Stand na speelronde <span id="asof"></span>, bijgewerkt op <span id="upd"></span>.</p>
 <h2 class="sr">Verwachte stand van de vier clubs</h2>
 <div class="sum" id="sum"></div>
 <nav aria-label="Kies een club"><div class="tabs" id="tabs"></div></nav>
@@ -67,73 +67,214 @@ button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
 <p class="sub" style="margin-top:18px;font-size:13.5px">Duels tussen de vier clubs hebben het label onderling duel en een grijze achtergrond. Kies je bij het ene team 3 punten, dan krijgt de tegenstander automatisch 0 (en bij een gelijkspel krijgen beide 1 punt). Je invoer blijft bewaard in je browser.</p>
 <div id="live" class="sr" aria-live="polite" role="status"></div>
 </main>
+<script id="data" type="application/json">
+{
+ "updated": "2026-10-13",
+ "first": 9,
+ "clubs": {
+  "Feyenoord": {
+   "points": 20,
+   "played": 8,
+   "opp": [
+    "Telstar:a",
+    "PSV:a",
+    "Fortuna Sittard:h",
+    "Heerenveen:a",
+    "Excelsior:h",
+    "Ajax:h",
+    "Willem II:a",
+    "Groningen:a",
+    "Twente:h",
+    "PSV:h",
+    "Excelsior:a",
+    "PEC Zwolle:h",
+    "AZ:a",
+    "NEC:h",
+    "Telstar:h",
+    "Ajax:a",
+    "Heerenveen:h",
+    "Go Ahead:a",
+    "Cambuur:h",
+    "Fortuna Sittard:a",
+    "ADO:a",
+    "Sparta:h",
+    "Willem II:h",
+    "Utrecht:a",
+    "Twente:a",
+    "Groningen:h"
+   ]
+  },
+  "Ajax": {
+   "points": 15,
+   "played": 8,
+   "opp": [
+    "Groningen:a",
+    "Sparta:a",
+    "AZ:h",
+    "Twente:a",
+    "ADO:h",
+    "Feyenoord:a",
+    "Utrecht:h",
+    "Cambuur:h",
+    "Go Ahead:a",
+    "Willem II:a",
+    "Groningen:h",
+    "Telstar:h",
+    "Heerenveen:a",
+    "Excelsior:a",
+    "Go Ahead:h",
+    "Feyenoord:h",
+    "ADO:a",
+    "PEC Zwolle:h",
+    "NEC:a",
+    "Twente:h",
+    "Utrecht:a",
+    "PSV:a",
+    "Fortuna Sittard:h",
+    "AZ:a",
+    "Sparta:h",
+    "Cambuur:a"
+   ]
+  },
+  "PSV": {
+   "points": 19,
+   "played": 8,
+   "opp": [
+    "ADO:a",
+    "Feyenoord:h",
+    "Willem II:h",
+    "Cambuur:a",
+    "NEC:a",
+    "Go Ahead:h",
+    "AZ:a",
+    "Telstar:h",
+    "PEC Zwolle:h",
+    "Feyenoord:a",
+    "Fortuna Sittard:a",
+    "ADO:h",
+    "Willem II:a",
+    "Twente:h",
+    "Cambuur:h",
+    "Sparta:a",
+    "Utrecht:h",
+    "Telstar:a",
+    "Groningen:a",
+    "AZ:h",
+    "PEC Zwolle:a",
+    "Ajax:h",
+    "Go Ahead:a",
+    "Excelsior:h",
+    "NEC:h",
+    "Heerenveen:a"
+   ]
+  },
+  "AZ": {
+   "points": 19,
+   "played": 8,
+   "opp": [
+    "Cambuur:a",
+    "Twente:h",
+    "Ajax:a",
+    "Groningen:h",
+    "Sparta:a",
+    "PEC Zwolle:a",
+    "PSV:h",
+    "NEC:h",
+    "Excelsior:a",
+    "Heerenveen:h",
+    "Go Ahead:a",
+    "Utrecht:h",
+    "Feyenoord:h",
+    "Groningen:a",
+    "Fortuna Sittard:h",
+    "NEC:a",
+    "Twente:a",
+    "Sparta:h",
+    "Excelsior:h",
+    "PSV:a",
+    "Willem II:a",
+    "Cambuur:h",
+    "Telstar:a",
+    "Ajax:h",
+    "PEC Zwolle:h",
+    "ADO:a"
+   ]
+  }
+ }
+}
+</script>
 <script>
-const CLUBS={
- Feyenoord:{now:20,c:"#E2001A",c2:"#111111",opp:"Telstar:a,PSV:a,Fortuna Sittard:h,Heerenveen:a,Excelsior:h,Ajax:h,Willem II:a,Groningen:a,Twente:h,PSV:h,Excelsior:a,PEC Zwolle:h,AZ:a,NEC:h,Telstar:h,Ajax:a,Heerenveen:h,Go Ahead:a,Cambuur:h,Fortuna Sittard:a,ADO:a,Sparta:h,Willem II:h,Utrecht:a,Twente:a,Groningen:h"},
- Ajax:{now:15,c:"#D2122E",c2:"#b9bcc2",opp:"Groningen:a,Sparta:a,AZ:h,Twente:a,ADO:h,Feyenoord:a,Utrecht:h,Cambuur:h,Go Ahead:a,Willem II:a,Groningen:h,Telstar:h,Heerenveen:a,Excelsior:a,Go Ahead:h,Feyenoord:h,ADO:a,PEC Zwolle:h,NEC:a,Twente:h,Utrecht:a,PSV:a,Fortuna Sittard:h,AZ:a,Sparta:h,Cambuur:a"},
- PSV:{now:19,c:"#D9141C",c2:"#2b2f36",opp:"ADO:a,Feyenoord:h,Willem II:h,Cambuur:a,NEC:a,Go Ahead:h,AZ:a,Telstar:h,PEC Zwolle:h,Feyenoord:a,Fortuna Sittard:a,ADO:h,Willem II:a,Twente:h,Cambuur:h,Sparta:a,Utrecht:h,Telstar:a,Groningen:a,AZ:h,PEC Zwolle:a,Ajax:h,Go Ahead:a,Excelsior:h,NEC:h,Heerenveen:a"},
- AZ:{now:19,c:"#C8102E",c2:"#222222",opp:"Cambuur:a,Twente:h,Ajax:a,Groningen:h,Sparta:a,PEC Zwolle:a,PSV:h,NEC:h,Excelsior:a,Heerenveen:h,Go Ahead:a,Utrecht:h,Feyenoord:h,Groningen:a,Fortuna Sittard:h,NEC:a,Twente:a,Sparta:h,Excelsior:h,PSV:a,Willem II:a,Cambuur:h,Telstar:a,Ajax:h,PEC Zwolle:h,ADO:a"}
-};
-const NAMES=Object.keys(CLUBS), KEY="kampioen-2026-27";
-NAMES.forEach(n=>CLUBS[n].games=CLUBS[n].opp.split(",").map(s=>{const[o,h]=s.split(":");return{o,home:h==="h"}}));
-let S={};NAMES.forEach(n=>S[n]=Array(26).fill(null));
-try{const v=JSON.parse(localStorage.getItem(KEY));if(v)NAMES.forEach(n=>{if(Array.isArray(v[n])&&v[n].length===26)S[n]=v[n]})}catch(e){}
-let cur="Feyenoord",focusSel=null;
+const DATA=JSON.parse(document.getElementById("data").textContent);
+const COL={Feyenoord:["#E2001A","#111111"],Ajax:["#D2122E","#b9bcc2"],PSV:["#D9141C","#2b2f36"],AZ:["#C8102E","#222222"]};
+const NAMES=Object.keys(DATA.clubs),KEY="kampioen-2026-27-v2",OLD="kampioen-2026-27";
+const rem=n=>{const c=DATA.clubs[n];return c.opp.map((s,k)=>{const[o,h]=s.split(":");return{r:DATA.first+k,o,home:h==="h"}}).filter(g=>g.r>c.played)};
+let S={};NAMES.forEach(n=>S[n]={});
+try{
+ const v=JSON.parse(localStorage.getItem(KEY));
+ if(v)NAMES.forEach(n=>{if(v[n]&&typeof v[n]==="object")S[n]=v[n]});
+ else{const w=JSON.parse(localStorage.getItem(OLD));if(w)NAMES.forEach(n=>{if(Array.isArray(w[n]))w[n].forEach((x,i)=>{if(x!==null)S[n][DATA.first+i]=x})})}
+}catch(e){}
+let cur=NAMES[0],focusSel=null;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
-const total=n=>CLUBS[n].now+S[n].reduce((a,b)=>a+(b||0),0);
-const filled=n=>S[n].filter(v=>v!==null).length;
+const total=n=>DATA.clubs[n].points+rem(n).reduce((a,g)=>a+(S[n][g.r]||0),0);
+const filled=n=>rem(n).filter(g=>S[n][g.r]!=null).length;
 const mirror=v=>v===3?0:v===0?3:v;
 const pts=x=>x===1?"1 punt":x+" punten";
 function leaderText(){
  if(!NAMES.some(n=>filled(n)>0))return"";
  const o=[...NAMES].sort((a,b)=>total(b)-total(a)),t=total(o[0]);
- const l=o.filter(n=>total(n)===t);
- return" Koploper: "+l.join(" en ")+" met "+t+" punten.";
+ return" Koploper: "+o.filter(n=>total(n)===t).join(" en ")+" met "+t+" punten.";
 }
 function say(msg){const l=document.getElementById("live");l.textContent="";setTimeout(()=>l.textContent=msg,60)}
-function pick(i,v){
- const old=S[cur][i],nv=old===v?null:v,g=CLUBS[cur].games[i];
- S[cur][i]=nv;
- if(S[g.o])S[g.o][i]=nv===null?null:mirror(nv);
+function pick(r,v){
+ const old=S[cur][r],nv=old===v?null:v,g=rem(cur).find(x=>x.r===r);
+ S[cur][r]=nv;
+ if(S[g.o])S[g.o][r]=nv===null?null:mirror(nv);
  save();
- focusSel=`.pick button[data-i="${i}"][data-v="${v}"]`;
+ focusSel=`.pick button[data-r="${r}"][data-v="${v}"]`;
  render();
- say(`${cur} ${g.home?"thuis tegen":"uit bij"} ${g.o}, ronde ${i+9}: ${nv===null?"keuze gewist":pts(nv)}. Verwacht totaal ${total(cur)} punten.`+leaderText());
+ say(`${cur} ${g.home?"thuis tegen":"uit bij"} ${g.o}, ronde ${r}: ${nv===null?"keuze gewist":pts(nv)}. Verwacht totaal ${total(cur)} punten.`+leaderText());
 }
-function theme(n){const c=CLUBS[n],s=document.documentElement.style;s.setProperty("--c",c.c);s.setProperty("--c2",c.c2);s.setProperty("--tint",c.c+"12")}
+function theme(n){const c=COL[n]||["#E2001A","#111"],s=document.documentElement.style;s.setProperty("--c",c[0]);s.setProperty("--c2",c[1]);s.setProperty("--tint",c[0]+"12")}
 function render(){
  theme(cur);
  const order=[...NAMES].sort((a,b)=>total(b)-total(a));
  const top=total(order[0]),anyFilled=NAMES.some(n=>filled(n)>0);
  document.getElementById("sum").innerHTML=order.map(n=>{
-  const c=CLUBS[n],lead=anyFilled&&total(n)===top;
-  return `<button type="button" class="card${lead?" lead":""}" style="--c:${c.c};--tint:${c.c}14" data-club="${n}" aria-label="${n}: verwacht totaal ${total(n)} punten, ${filled(n)} van 26 wedstrijden ingevuld${lead?", koploper":""}. Open de tabel van ${n}."><div class="n">${n}</div><div class="p">${total(n)}</div><div class="m">${lead?"Koploper":filled(n)+"/26 ingevuld"}</div></button>`}).join("");
+  const c=COL[n]||["#E2001A"],lead=anyFilled&&total(n)===top,tot=rem(n).length;
+  return `<button type="button" class="card${lead?" lead":""}" style="--c:${c[0]};--tint:${c[0]}14" data-club="${n}" aria-label="${n}: verwacht totaal ${total(n)} punten, ${filled(n)} van ${tot} wedstrijden ingevuld${lead?", koploper":""}. Open de tabel van ${n}."><div class="n">${n}</div><div class="p">${total(n)}</div><div class="m">${lead?"Koploper":filled(n)+"/"+tot+" ingevuld"}</div></button>`}).join("");
  document.getElementById("tabs").innerHTML=NAMES.map(n=>`<button type="button" class="tab" data-club="${n}" ${n===cur?'aria-current="true"':""}>${n}</button>`).join("");
- document.getElementById("cap").textContent=`Resterende wedstrijden van ${cur}, ronde 9 tot en met 34`;
- let run=CLUBS[cur].now;
- let h=`<tr class="start"><td class="r"></td><th scope="row" class="o">Stand na 8 wedstrijden</th><td></td><td class="t">${run}</td></tr>`;
- CLUBS[cur].games.forEach((g,i)=>{
-  const v=S[cur][i];run+=v||0;
+ const c=DATA.clubs[cur],list=rem(cur);
+ document.getElementById("cap").textContent=list.length?`Resterende wedstrijden van ${cur}, ronde ${list[0].r} tot en met ${list[list.length-1].r}`:`${cur} heeft geen resterende wedstrijden`;
+ let run=c.points;
+ let h=`<tr class="start"><td class="r"></td><th scope="row" class="o">Stand na ${c.played} wedstrijden</th><td></td><td class="t">${run}</td></tr>`;
+ list.forEach(g=>{
+  const v=S[cur][g.r]==null?null:S[cur][g.r];run+=v||0;
   const duel=!!S[g.o];
   const btns=[3,1,0].map(x=>{
    const on=v===x;
-   return `<button type="button" data-i="${i}" data-v="${x}" aria-pressed="${on}" aria-label="${cur} ${g.home?"thuis tegen":"uit bij"} ${g.o}, ronde ${i+9}: ${pts(x)}">${on?'<span aria-hidden="true">✓ </span>':""}${x}</button>`}).join("");
-  h+=`<tr class="${duel?"duel":""}"><td class="r">${i+9}</td><th scope="row" class="o"><b>${g.o}</b><small>${g.home?"thuis":"uit"}</small>${duel?'<small class="tag">onderling duel</small>':""}</th><td><div class="pick" role="group" aria-label="Uitslag ${cur} tegen ${g.o}, ronde ${i+9}">${btns}</div></td><td class="t">${v===null?'<span aria-hidden="true">–</span><span class="sr">nog niet ingevuld</span>':run}</td></tr>`;
+   return `<button type="button" data-r="${g.r}" data-v="${x}" aria-pressed="${on}" aria-label="${cur} ${g.home?"thuis tegen":"uit bij"} ${g.o}, ronde ${g.r}: ${pts(x)}">${on?'<span aria-hidden="true">✓ </span>':""}${x}</button>`}).join("");
+  h+=`<tr class="${duel?"duel":""}"><td class="r">${g.r}</td><th scope="row" class="o"><b>${g.o}</b><small>${g.home?"thuis":"uit"}</small>${duel?'<small class="tag">onderling duel</small>':""}</th><td><div class="pick" role="group" aria-label="Uitslag ${cur} tegen ${g.o}, ronde ${g.r}">${btns}</div></td><td class="t">${v===null?'<span aria-hidden="true">–</span><span class="sr">nog niet ingevuld</span>':run}</td></tr>`;
  });
  document.getElementById("rows").innerHTML=h;
- document.getElementById("cnt").textContent=`${filled(cur)} van 26 wedstrijden ingevuld. Maximaal haalbaar: ${CLUBS[cur].now+78} punten.`;
+ document.getElementById("cnt").textContent=`${filled(cur)} van ${list.length} wedstrijden ingevuld. Maximaal haalbaar: ${c.points+3*list.length} punten.`;
  if(focusSel){const el=document.querySelector(focusSel);if(el)el.focus();focusSel=null}
 }
 document.addEventListener("click",e=>{
  const b=e.target.closest("button");if(!b)return;
- if(b.dataset.club){cur=b.dataset.club;focusSel=`.tab[data-club="${cur}"]`;render();say(`Tabel van ${cur}. Verwacht totaal ${total(cur)} punten, ${filled(cur)} van 26 wedstrijden ingevuld.`)}
- else if(b.dataset.i){pick(+b.dataset.i,+b.dataset.v)}
+ if(b.dataset.club){cur=b.dataset.club;focusSel=`.tab[data-club="${cur}"]`;render();say(`Tabel van ${cur}. Verwacht totaal ${total(cur)} punten, ${filled(cur)} van ${rem(cur).length} wedstrijden ingevuld.`)}
+ else if(b.dataset.r){pick(+b.dataset.r,+b.dataset.v)}
 });
 document.getElementById("reset").onclick=()=>{
- CLUBS[cur].games.forEach((g,i)=>{if(S[g.o])S[g.o][i]=null});
- S[cur]=Array(26).fill(null);save();render();
+ rem(cur).forEach(g=>{S[cur][g.r]=null;if(S[g.o])S[g.o][g.r]=null});
+ save();render();
  say(`Alle keuzes voor ${cur} gewist. Verwacht totaal ${total(cur)} punten.`);
 };
+(function(){
+ const played=Math.max(...NAMES.map(n=>DATA.clubs[n].played)),u=DATA.updated.split("-");
+ document.getElementById("asof").textContent=played;
+ document.getElementById("upd").textContent=u[2]+"-"+u[1]+"-"+u[0];
+})();
 render();
 </script>
 </body>
