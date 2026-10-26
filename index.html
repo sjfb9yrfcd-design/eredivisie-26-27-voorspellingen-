@@ -45,7 +45,17 @@ tr.start td{font-weight:700;border-bottom:2px solid var(--line)}
 .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;color:var(--mute);font-size:13.5px}
 .reset{border:1px solid #9aa0ab;background:#fff;border-radius:5px;padding:8px 12px;font:inherit;color:var(--ink);cursor:pointer}
 .reset:hover{border-color:var(--ink)}
-button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
+button:focus-visible,input:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
+[hidden]{display:none!important}
+.save{margin-top:24px;padding:14px;border:1px solid var(--line);border-radius:6px;background:var(--soft)}
+.save h2{font:700 17px/1.2 Georgia,"Times New Roman",serif;margin:0 0 6px}
+.save p{margin:0 0 12px;color:var(--mute);font-size:13.5px}
+.save .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.save input{flex:1 1 200px;min-width:0;min-height:40px;padding:8px 10px;border:1px solid #9aa0ab;border-radius:5px;background:#fff;color:var(--ink);font:600 15px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.05em;text-transform:uppercase}
+.save .code{font:700 18px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;background:#fff;border:1px dashed #9aa0ab;border-radius:5px;padding:8px 10px;user-select:all}
+.save .st{min-height:1.4em;margin:0;font-size:13.5px;color:var(--ink)}
+.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+.primary:hover{border-color:var(--ink);opacity:.9}
 @media(max-width:520px){main{padding:20px 12px 40px}.sum{grid-template-columns:repeat(2,1fr)}td,tbody th,th{padding:7px 4px}tbody th{font-size:14px}.pick button{min-width:32px}.pick{gap:3px}td.t{width:38px}.foot{flex-direction:column;align-items:flex-start}}
 @media(max-width:360px){.pick button{min-width:29px;font-size:12px}}
 </style>
@@ -64,17 +74,25 @@ button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
 <tbody id="rows"></tbody>
 </table></div>
 <div class="foot"><span id="cnt"></span><button class="reset" id="reset" type="button">Wis dit team</button></div>
-<p class="sub" style="margin-top:18px;font-size:13.5px">Duels tussen de vier clubs hebben het label onderling duel en een grijze achtergrond. Kies je bij het ene team 3 punten, dan krijgt de tegenstander automatisch 0 (en bij een gelijkspel krijgen beide 1 punt). Je invoer blijft bewaard in je browser.</p>
+<p class="sub" style="margin-top:18px;font-size:13.5px">Duels tussen de vier clubs hebben het label onderling duel en een grijze achtergrond. Kies je bij het ene team 3 punten, dan krijgt de tegenstander automatisch 0 (en bij een gelijkspel krijgen beide 1 punt). Je invoer blijft bewaard in je browser; met een herstelcode ook online.</p>
+<section class="save" id="saveBox" hidden aria-labelledby="saveH">
+<h2 id="saveH">Bewaar je voorspellingen</h2>
+<p>Zonder account of e-mailadres. Je krijgt een willekeurige herstelcode; daarmee haal je je voorspellingen op elk apparaat terug. Raak je de code kwijt, dan is er geen manier om je voorspellingen terug te vinden.</p>
+<div class="row" id="codeRow" hidden><span class="sr">Jouw herstelcode:</span><code class="code" id="codeVal"></code><button type="button" class="reset" id="copyCode">Kopieer code</button></div>
+<div class="row"><button type="button" class="reset primary" id="saveBtn">Bewaar online</button></div>
+<div class="row"><label class="sr" for="codeIn">Herstelcode invullen</label><input id="codeIn" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX"><button type="button" class="reset" id="loadBtn">Haal op</button></div>
+<p class="st" id="saveSt" role="status" aria-live="polite"></p>
+</section>
 <div id="live" class="sr" aria-live="polite" role="status"></div>
 </main>
 <script id="data" type="application/json">
 {
- "updated": "2026-10-26",
+ "updated": "2026-10-13",
  "first": 9,
  "clubs": {
   "Feyenoord": {
-   "points": 24,
-   "played": 10,
+   "points": 20,
+   "played": 8,
    "opp": [
     "Telstar:a",
     "PSV:a",
@@ -105,8 +123,8 @@ button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
    ]
   },
   "Ajax": {
-   "points": 21,
-   "played": 10,
+   "points": 15,
+   "played": 8,
    "opp": [
     "Groningen:a",
     "Sparta:a",
@@ -137,8 +155,8 @@ button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
    ]
   },
   "PSV": {
-   "points": 20,
-   "played": 10,
+   "points": 19,
+   "played": 8,
    "opp": [
     "ADO:a",
     "Feyenoord:h",
@@ -169,8 +187,8 @@ button:focus-visible{outline:3px solid #1c1f23;outline-offset:2px}
    ]
   },
   "AZ": {
-   "points": 20,
-   "played": 10,
+   "points": 19,
+   "played": 8,
    "opp": [
     "Cambuur:a",
     "Twente:h",
@@ -215,7 +233,7 @@ try{
  else{const w=JSON.parse(localStorage.getItem(OLD));if(w)NAMES.forEach(n=>{if(Array.isArray(w[n]))w[n].forEach((x,i)=>{if(x!==null)S[n][DATA.first+i]=x})})}
 }catch(e){}
 let cur=NAMES[0],focusSel=null;
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}queueSave()};
 const total=n=>DATA.clubs[n].points+rem(n).reduce((a,g)=>a+(S[n][g.r]||0),0);
 const filled=n=>rem(n).filter(g=>S[n][g.r]!=null).length;
 const mirror=v=>v===3?0:v===0?3:v;
@@ -275,6 +293,82 @@ document.getElementById("reset").onclick=()=>{
  document.getElementById("asof").textContent=played;
  document.getElementById("upd").textContent=u[2]+"-"+u[1]+"-"+u[0];
 })();
+/* ===== Online opslaan met herstelcode (Supabase) =====
+   Vul hieronder de Project-URL en de publishable (of anon) key in.
+   Zolang ze leeg zijn blijft het opslaanvak verborgen. */
+const SB={url:"dyvvbgupykbymbmxcsdy.supabase.com",key:"sb_publishable_5dGM57PtoetaH3gyMa8Vpw_mpmQg-3Z"};
+const CODE_KEY="kampioen-2026-27-code",ALPHA="ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+let code=null,saveTimer=null;
+try{code=localStorage.getItem(CODE_KEY)}catch(e){}
+const sbOn=()=>!!(SB.url&&SB.key&&window.crypto&&crypto.subtle);
+const $=id=>document.getElementById(id);
+const st=m=>{$("saveSt").textContent=m};
+const norm=s=>String(s).toUpperCase().replace(/[^A-Z0-9]/g,"");
+const fmt=c=>c.replace(/(.{4})(?=.)/g,"$1-");
+const validCode=c=>c.length===16&&[...c].every(x=>ALPHA.includes(x));
+function newCode(){
+ const out=[],lim=256-256%ALPHA.length;
+ while(out.length<16){
+  for(const x of crypto.getRandomValues(new Uint8Array(32))){if(x<lim&&out.length<16)out.push(ALPHA[x%ALPHA.length])}
+ }
+ return fmt(out.join(""));
+}
+async function hashCode(c){
+ const d=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("kampioen-2026-27:"+c));
+ return[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+async function rpc(fn,body){
+ const r=await fetch(SB.url.replace(/\/$/,"")+"/rest/v1/rpc/"+fn,{method:"POST",headers:{"Content-Type":"application/json",apikey:SB.key},body:JSON.stringify(body)});
+ if(!r.ok)throw new Error("HTTP "+r.status);
+ const t=await r.text();return t?JSON.parse(t):null;
+}
+function clean(d){
+ const o={};
+ NAMES.forEach(n=>{o[n]={};const v=d&&d[n];if(v&&typeof v==="object")for(const r in v){const x=v[r];if(/^\d{1,2}$/.test(r)&&(x===0||x===1||x===3))o[n][r]=x}});
+ return o;
+}
+function showCode(){
+ if(!code)return;
+ $("codeVal").textContent=code;$("codeRow").hidden=false;$("saveBtn").textContent="Bewaar nu";
+}
+async function saveNow(){
+ if(!sbOn())return;
+ const first=!code;
+ try{
+  const c=first?newCode():code;
+  await rpc("save_prediction",{p_hash:await hashCode(norm(c)),p_data:clean(S)});
+  code=c;
+  if(first){try{localStorage.setItem(CODE_KEY,code)}catch(e){}}
+  showCode();
+  st(first?"Opgeslagen. Noteer je herstelcode: zonder code kun je je voorspellingen niet terughalen.":"Opgeslagen om "+new Date().toLocaleTimeString("nl-NL",{hour:"2-digit",minute:"2-digit"})+".");
+ }catch(e){st("Opslaan is niet gelukt. Controleer je verbinding en probeer het opnieuw.")}
+}
+function queueSave(){
+ if(!code||!sbOn())return;
+ clearTimeout(saveTimer);st("Wijzigingen worden opgeslagen…");
+ saveTimer=setTimeout(saveNow,1500);
+}
+async function loadNow(){
+ const c=norm($("codeIn").value);
+ if(!validCode(c)){st("Die code klopt niet. Een herstelcode heeft 16 tekens, zoals K7M2-X9QP-4WTD-HR6N.");return}
+ if(NAMES.some(n=>filled(n)>0)&&code!==fmt(c)&&!confirm("Je huidige invoer in deze browser wordt vervangen door de opgeslagen voorspellingen. Doorgaan?"))return;
+ try{
+  const d=await rpc("load_prediction",{p_hash:await hashCode(c)});
+  if(!d){st("Geen voorspellingen gevonden bij deze code.");return}
+  const k=clean(d);NAMES.forEach(n=>S[n]=k[n]);
+  code=fmt(c);
+  try{localStorage.setItem(CODE_KEY,code);localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+  $("codeIn").value="";showCode();render();
+  st("Voorspellingen opgehaald. Wijzigingen worden voortaan automatisch bij deze code opgeslagen.");
+ }catch(e){st("Ophalen is niet gelukt. Controleer je verbinding en probeer het opnieuw.")}
+}
+if(sbOn()){
+ $("saveBox").hidden=false;showCode();
+ $("saveBtn").onclick=()=>{clearTimeout(saveTimer);saveNow()};
+ $("loadBtn").onclick=loadNow;
+ $("codeIn").addEventListener("keydown",e=>{if(e.key==="Enter")loadNow()});
+ $("copyCode").onclick=async()=>{try{await navigator.clipboard.writeText(code);st("Code gekopieerd.")}catch(e){st("Kopiëren lukte niet; selecteer de code en kopieer die zelf.")}};
+}
 render();
 </script>
 </body>
