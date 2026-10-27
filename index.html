@@ -122,12 +122,12 @@ details.rv .wrap{padding:0 8px 8px}
 </main>
 <script id="data" type="application/json">
 {
- "updated": "2026-10-27",
+ "updated": "2026-10-13",
  "first": 9,
  "clubs": {
   "Feyenoord": {
-   "points": 24,
-   "played": 10,
+   "points": 20,
+   "played": 8,
    "opp": [
     "Telstar:a",
     "PSV:a",
@@ -158,8 +158,8 @@ details.rv .wrap{padding:0 8px 8px}
    ]
   },
   "Ajax": {
-   "points": 21,
-   "played": 10,
+   "points": 15,
+   "played": 8,
    "opp": [
     "Groningen:a",
     "Sparta:a",
@@ -190,8 +190,8 @@ details.rv .wrap{padding:0 8px 8px}
    ]
   },
   "PSV": {
-   "points": 20,
-   "played": 10,
+   "points": 19,
+   "played": 8,
    "opp": [
     "ADO:a",
     "Feyenoord:h",
@@ -222,8 +222,8 @@ details.rv .wrap{padding:0 8px 8px}
    ]
   },
   "AZ": {
-   "points": 20,
-   "played": 10,
+   "points": 19,
+   "played": 8,
    "opp": [
     "Cambuur:a",
     "Twente:h",
@@ -267,6 +267,12 @@ details.rv .wrap{padding:0 8px 8px}
   "AZ": {
    "8": 19
   }
+ },
+ "early": {
+  "Feyenoord": "WGWGWWWWWG",
+  "Ajax": "WGWVWWGGWW",
+  "PSV": "GWWWWWVWVG",
+  "AZ": "wWWWWGWVGV"
  }
 }
 </script>
@@ -362,20 +368,39 @@ const snaps=n=>{
  const c=DATA.clubs[n];m.set(c.played,c.points);
  return[...m].sort((a,b)=>a[0]-b[0]);
 };
-function predLine(n){
- const c=DATA.clubs[n],out=[[c.played,c.points]];let p=c.points;
- for(let r=c.played+1;r<=LAST;r++){const v=S[n][r];if(v==null)break;p+=v;out.push([r,p])}
+function chartSnaps(n){
+ /* Alleen voor de grafiek: werkelijke punten per gespeelde wedstrijd.
+    Optioneel vult DATA.early de vroege rondes aan, als W/G/V-reeks per club (bijv. "WWGWWWGW"). */
+ const m=new Map(),c=DATA.clubs[n],h=(DATA.hist&&DATA.hist[n])||{};
+ const raw=String((DATA.early&&DATA.early[n])||"").replace(/\s/g,"").toUpperCase();
+ if(raw&&/^[WGV]+$/.test(raw)){
+  let p=0;const t=[...raw].map(ch=>p+=ch==="W"?3:ch==="G"?1:0);
+  const known=[...Object.keys(h).map(Number).filter(x=>Number.isFinite(x)&&x<=raw.length),c.played<=raw.length?c.played:0].filter(Boolean);
+  const ok=raw.length<=c.played&&known.every(x=>(x===c.played?c.points:h[x])===t[x-1]);
+  if(ok)t.forEach((v,i)=>m.set(i+1,v));else console.warn("Vroege uitslagen van "+n+" kloppen niet met de bekende punten en worden genegeerd.");
+ }
+ Object.keys(h).forEach(k=>{if(Number.isFinite(+k)&&Number.isFinite(h[k]))m.set(+k,h[k])});
+ m.set(c.played,c.points);
+ return[...m].sort((a,b)=>a[0]-b[0]);
+}
+function predLine(n,act){
+ /* Begint bij de eerste ingevulde wedstrijd waarvan de stand ervoor bekend is en loopt door tot de eerste lege wedstrijd. */
+ const have=new Map(act),filled=Object.keys(S[n]).map(Number).filter(r=>r>=1&&r<=LAST&&S[n][r]!=null).sort((a,b)=>a-b);
+ const r0=filled.find(r=>r===1||have.has(r-1));
+ if(r0==null)return[];
+ let p=r0===1?0:have.get(r0-1);const out=[[r0-1,p]];
+ for(let r=r0;r<=LAST;r++){const v=S[n][r];if(v==null)break;p+=v;out.push([r,p])}
  return out;
 }
 function chartHTML(){
  const W=640,H=340,L=34,R=84,T=12,B=40;
- const act=NAMES.map(snaps),pre=NAMES.map(predLine),all=[].concat(...act,...pre);
+ const act=NAMES.map(chartSnaps),pre=NAMES.map((n,i)=>predLine(n,act[i])),all=[].concat(...act,...pre);
  const x0=Math.min(...all.map(p=>p[0])),x1=Math.max(LAST,x0+1);
  const lo=Math.floor((Math.min(...all.map(p=>p[1]))-2)/5)*5,hi=Math.ceil((Math.max(...all.map(p=>p[1]))+2)/5)*5;
  const sx=v=>L+(v-x0)/(x1-x0)*(W-L-R),sy=v=>T+(1-(v-lo)/(hi-lo))*(H-T-B),step=hi-lo>40?10:5;
  let g="";
  for(let v=lo;v<=hi;v+=step)g+=`<line x1="${L}" x2="${W-R}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}" stroke="#e3e5e9"/><text x="${L-6}" y="${(sy(v)+4).toFixed(1)}" text-anchor="end">${v}</text>`;
- const ticks=[];for(let r=Math.ceil(x0/5)*5;r<=x1;r+=5)ticks.push(r);if(!ticks.includes(x1))ticks.push(x1);
+ const ticks=[];for(let r=Math.ceil(x0/5)*5;r<=x1;r+=5)ticks.push(r);if(!ticks.includes(x1))ticks.push(x1);if(ticks[0]-x0>=3)ticks.unshift(x0);
  ticks.forEach(r=>g+=`<text x="${sx(r).toFixed(1)}" y="${H-22}" text-anchor="middle">${r}</text>`);
  g+=`<text x="${((L+W-R)/2).toFixed(1)}" y="${H-6}" text-anchor="middle">speelronde</text>`;
  const d=pts=>pts.map((q,k)=>(k?"L":"M")+sx(q[0]).toFixed(1)+" "+sy(q[1]).toFixed(1)).join(" ");
@@ -385,7 +410,7 @@ function chartHTML(){
   if(a.length>1)g+=`<path d="${d(a)}" fill="none" stroke="${col}" stroke-width="2.5"/>`;
   a.forEach(q=>g+=`<circle cx="${sx(q[0]).toFixed(1)}" cy="${sy(q[1]).toFixed(1)}" r="3.3" fill="${col}"/>`);
   if(p.length>1)g+=`<path d="${d(p)}" fill="none" stroke="${col}" stroke-width="2.5" stroke-dasharray="6 4"/>`;
-  const e=p[p.length-1];labs.push({n,col,x:sx(e[0]),y:sy(e[1]),v:e[1]});
+  const q=p.length>1?p:a,e=q[q.length-1];labs.push({n,col,x:sx(e[0]),y:sy(e[1]),v:e[1]});
  });
  let prev=-99;
  labs.sort((a,b)=>a.y-b.y).forEach(l=>{l.ly=Math.max(l.y,prev+14);prev=l.ly;
@@ -394,8 +419,8 @@ function chartHTML(){
   return `${n}: ${la[1]} punten na ${la[0]} wedstrijden`+(p.length>1?`, volgens jouw invulling ${le[1]} punten na ronde ${le[0]}`:"")}).join(". ");
  const leg=NAMES.map(n=>`<li><i style="border-color:${PAL[n]}"></i>${esc(n)}</li>`).join("")+
   `<li><i style="border-top-style:solid;border-color:#888"></i>werkelijk</li><li><i style="border-top-style:dashed;border-color:#888"></i>jouw voorspelling</li>`;
- const few=act.every(a=>a.length<2)?" De doorgetrokken lijn groeit na elke maandagupdate.":"";
- return `<h2>Puntenverloop per speelronde</h2><p class="note">Doorgetrokken: de werkelijke stand na elke update. Stippellijn: jouw voorspelling, tot de eerste wedstrijd die je nog niet hebt ingevuld.${few}</p><ul class="legend">${leg}</ul><div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="chT chD"><title id="chT">Puntenverloop per speelronde</title><desc id="chD">${esc(desc)}</desc>${g}</svg></div>`;
+ const few=act.every(a=>a.length<2)?" De doorgetrokken lijn groeit na elke maandagupdate.":"",gap=act.some(a=>a.some((q,k)=>k&&q[0]-a[k-1][0]>1))?" Rondes waarvan de stand niet is bewaard, zijn met een rechte lijn verbonden.":"";
+ return `<h2>Puntenverloop per speelronde</h2><p class="note">Doorgetrokken: de werkelijke stand na elke update. Stippellijn: jouw voorspelling. Die begint bij de eerste wedstrijd die je hebt ingevuld en stopt bij de eerste wedstrijd die je overslaat.${gap}${few}</p><ul class="legend">${leg}</ul><div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="chT chD"><title id="chT">Puntenverloop per speelronde</title><desc id="chD">${esc(desc)}</desc>${g}</svg></div>`;
 }
 function reviewRows(n){
  const sn=snaps(n),rows=[];
