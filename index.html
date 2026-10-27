@@ -65,11 +65,6 @@ a.reset{display:inline-block;text-decoration:none}
 .chart svg{width:100%;height:auto;display:block}
 .chart text{font:12px "Avenir Next","Segoe UI",system-ui,sans-serif;fill:var(--mute)}
 .chart text.lbl{font-weight:700}
-details.rv{border:1px solid var(--line);border-radius:6px;margin:0 0 10px;background:#fff}
-details.rv>summary{padding:10px 12px;cursor:pointer;font-weight:600}
-details.rv .wrap{padding:0 8px 8px}
-.ok{color:#0a6b2d;font-weight:700}
-.no{color:#9b1c1c;font-weight:600}
 .share img{display:block;max-width:100%;width:320px;height:auto;border:1px solid var(--line);border-radius:6px;margin:10px 0}
 .bars .b{display:grid;grid-template-columns:84px 1fr 78px;gap:8px;align-items:center;margin:6px 0;font-size:14px}
 .bars .bt{height:14px;background:#e3e5e9;border-radius:3px;overflow:hidden}
@@ -316,11 +311,11 @@ function render(){
  document.getElementById("sum").innerHTML=order.map(n=>{
   const c=COL[n]||["#E2001A"],lead=anyFilled&&total(n)===top,tot=rem(n).length;
   return `<button type="button" class="card${lead?" lead":""}" style="--c:${c[0]};--tint:${c[0]}14" data-club="${n}" aria-label="${n}: verwacht totaal ${total(n)} punten, ${filled(n)} van ${tot} wedstrijden ingevuld${lead?", koploper":""}. Open de tabel van ${n}."><div class="n">${n}</div><div class="p">${total(n)}</div><div class="m">${lead?"Koploper":filled(n)+"/"+tot+" ingevuld"}</div></button>`}).join("");
- document.getElementById("tabs").innerHTML=NAMES.map(n=>`<button type="button" class="tab" data-club="${n}" ${mode==="club"&&n===cur?'aria-current="true"':""}>${n}</button>`).join("")+[["chart","Grafiek"],["review","Terugblik"],["share","Delen"]].map(([v,t])=>`<button type="button" class="tab" data-view="${v}" ${mode===v?'aria-current="true"':""}>${t}</button>`).join("");
- const isClub=mode==="club",isPanel=mode==="chart"||mode==="review",P=document.getElementById("panel");
+ document.getElementById("tabs").innerHTML=NAMES.map(n=>`<button type="button" class="tab" data-club="${n}" ${mode==="club"&&n===cur?'aria-current="true"':""}>${n}</button>`).join("")+[["chart","Grafiek"],["share","Delen"]].map(([v,t])=>`<button type="button" class="tab" data-view="${v}" ${mode===v?'aria-current="true"':""}>${t}</button>`).join("");
+ const isClub=mode==="club",isPanel=mode==="chart",P=document.getElementById("panel");
  document.getElementById("tblWrap").hidden=!isClub;document.getElementById("foot").hidden=!isClub;document.getElementById("duelNote").hidden=!isClub;P.hidden=!isPanel;document.getElementById("shareBox").hidden=mode!=="share";
  if(!isClub){
-  if(isPanel)P.innerHTML=mode==="chart"?chartHTML():reviewHTML();
+  if(isPanel)P.innerHTML=chartHTML();
   if(focusSel){const el=document.querySelector(focusSel);if(el)el.focus();focusSel=null}
   return;
  }
@@ -342,7 +337,7 @@ function render(){
 }
 document.addEventListener("click",e=>{
  const b=e.target.closest("button");if(!b)return;
- if(b.dataset.view){mode=b.dataset.view;focusSel=`.tab[data-view="${mode}"]`;render();say(mode==="chart"?"Grafiek van het puntenverloop per speelronde.":mode==="share"?"Delen: maak een plaatje van je voorspelling.":"Terugblik: jouw voorspelling tegen de werkelijkheid.")}
+ if(b.dataset.view){mode=b.dataset.view;focusSel=`.tab[data-view="${mode}"]`;render();say(mode==="chart"?"Grafiek van het puntenverloop per speelronde.":"Delen: maak een plaatje van je voorspelling.")}
  else if(b.dataset.club){cur=b.dataset.club;mode="club";focusSel=`.tab[data-club="${cur}"]`;render();say(`Tabel van ${cur}. Verwacht totaal ${total(cur)} punten, ${filled(cur)} van ${rem(cur).length} wedstrijden ingevuld.`)}
  else if(b.dataset.r){pick(+b.dataset.r,+b.dataset.v)}
 });
@@ -358,16 +353,10 @@ document.getElementById("reset").onclick=()=>{
 })();
 const $=id=>document.getElementById(id);
 
-/* ===== Grafiek, terugblik en plaatje ===== */
+/* ===== Grafiek en plaatje ===== */
 const PAL={Feyenoord:"#E2001A",Ajax:"#222222",PSV:"#1565C0",AZ:"#E08A00"};
 const LAST=DATA.first+Math.max(...NAMES.map(n=>DATA.clubs[n].opp.length))-1;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const snaps=n=>{
- const h=(DATA.hist&&DATA.hist[n])||{},m=new Map();
- Object.keys(h).forEach(k=>{if(Number.isFinite(+k)&&Number.isFinite(h[k]))m.set(+k,h[k])});
- const c=DATA.clubs[n];m.set(c.played,c.points);
- return[...m].sort((a,b)=>a[0]-b[0]);
-};
 function chartSnaps(n){
  /* Alleen voor de grafiek: werkelijke punten per gespeelde wedstrijd.
     Optioneel vult DATA.early de vroege rondes aan, als W/G/V-reeks per club (bijv. "WWGWWWGW"). */
@@ -396,7 +385,7 @@ function chartHTML(){
  const W=640,H=340,L=34,R=84,T=12,B=40;
  const act=NAMES.map(chartSnaps),pre=NAMES.map((n,i)=>predLine(n,act[i])),all=[].concat(...act,...pre);
  const x0=Math.min(...all.map(p=>p[0])),x1=Math.max(LAST,x0+1);
- const lo=Math.floor((Math.min(...all.map(p=>p[1]))-2)/5)*5,hi=Math.ceil((Math.max(...all.map(p=>p[1]))+2)/5)*5;
+ const lo=0,hi=Math.ceil((Math.max(...all.map(p=>p[1]))+2)/5)*5;
  const sx=v=>L+(v-x0)/(x1-x0)*(W-L-R),sy=v=>T+(1-(v-lo)/(hi-lo))*(H-T-B),step=hi-lo>40?10:5;
  let g="";
  for(let v=lo;v<=hi;v+=step)g+=`<line x1="${L}" x2="${W-R}" y1="${sy(v).toFixed(1)}" y2="${sy(v).toFixed(1)}" stroke="#e3e5e9"/><text x="${L-6}" y="${(sy(v)+4).toFixed(1)}" text-anchor="end">${v}</text>`;
@@ -421,44 +410,6 @@ function chartHTML(){
   `<li><i style="border-top-style:solid;border-color:#888"></i>werkelijk</li><li><i style="border-top-style:dashed;border-color:#888"></i>jouw voorspelling</li>`;
  const few=act.every(a=>a.length<2)?" De doorgetrokken lijn groeit na elke maandagupdate.":"",gap=act.some(a=>a.some((q,k)=>k&&q[0]-a[k-1][0]>1))?" Rondes waarvan de stand niet is bewaard, zijn met een rechte lijn verbonden.":"";
  return `<h2>Puntenverloop per speelronde</h2><p class="note">Doorgetrokken: de werkelijke stand na elke update. Stippellijn: jouw voorspelling. Die begint bij de eerste wedstrijd die je hebt ingevuld en stopt bij de eerste wedstrijd die je overslaat.${gap}${few}</p><ul class="legend">${leg}</ul><div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="chT chD"><title id="chT">Puntenverloop per speelronde</title><desc id="chD">${esc(desc)}</desc>${g}</svg></div>`;
-}
-function reviewRows(n){
- const sn=snaps(n),rows=[];
- for(let i=1;i<sn.length;i++){
-  const p0=sn[i-1][0],p1=sn[i][0],games=p1-p0,act=sn[i][1]-sn[i-1][1];
-  let filled=0,sum=0;
-  for(let r=p0+1;r<=p1;r++){const v=S[n][r];if(v!=null){filled++;sum+=v}}
-  rows.push({from:p0+1,to:p1,games,act,filled,sum});
- }
- return rows;
-}
-function oppText(n,a,b){
- const o=[];for(let r=a;r<=b;r++){const s=DATA.clubs[n].opp[r-DATA.first];if(!s)continue;const[x,h]=s.split(":");o.push(`${x} ${h==="h"?"thuis":"uit"}`)}
- return o.join(", ");
-}
-function reviewHTML(){
- const per=NAMES.map(n=>({n,rows:reviewRows(n)}));
- let h=`<h2>Terugblik: jouw voorspelling tegen de werkelijkheid</h2>`;
- if(!per.some(p=>p.rows.length))return h+`<p class="note">Nog niets om te vergelijken. Na de eerstvolgende maandagupdate waarin wedstrijden zijn gespeeld, zie je hier hoe dicht je erbij zat.</p>`;
- let good=0,done=0;
- per.forEach(p=>p.rows.forEach(r=>{if(r.filled===r.games){done++;if(r.sum===r.act)good++}}));
- h+=`<p class="note">${done?`In totaal ${good} van ${done} gespeelde blokken precies goed voorspeld.`:"Je had nog geen van de gespeelde wedstrijden ingevuld."} Het werkelijke aantal punten komt uit de stand van de maandagupdate. Zijn er tussen twee updates meerdere wedstrijden gespeeld, dan vergelijk ik de som van de punten.</p>`;
- per.forEach(p=>{
-  const dn=p.rows.filter(r=>r.filled===r.games),gd=dn.filter(r=>r.sum===r.act).length;
-  const head=p.rows.length?`${p.n}: ${gd} van ${dn.length} goed${dn.length?` (${pts(dn.reduce((a,r)=>a+r.sum,0))} verwacht, ${dn.reduce((a,r)=>a+r.act,0)} gehaald)`:""}`:`${p.n}: nog niets gespeeld sinds de eerste stand`;
-  let t="";
-  p.rows.forEach(r=>{
-   const diff=r.sum-r.act,full=r.filled===r.games;
-   const pred=r.filled===0?"niet ingevuld":full?String(r.sum):`${r.sum} (${r.filled} van ${r.games})`;
-   const v=!full?'<span class="sr">niet volledig ingevuld</span><span aria-hidden="true">–</span>'
-    :diff===0?'<span class="ok"><span aria-hidden="true">✓ </span>goed</span>'
-    :r.games===1?'<span class="no"><span aria-hidden="true">✗ </span>ernaast</span>'
-    :`<span class="no">${Math.abs(diff)} te ${diff>0?"hoog":"laag"}</span>`;
-   t+=`<tr><th scope="row" class="o"><b>${r.from===r.to?"Ronde "+r.from:"Ronde "+r.from+"–"+r.to}</b><small>${esc(oppText(p.n,r.from,r.to))}</small></th><td>${pred}</td><td>${r.act}</td><td>${v}</td></tr>`;
-  });
-  h+=`<details class="rv"${p.n===cur?" open":""}><summary>${esc(head)}</summary>${t?`<div class="wrap"><table><thead><tr><th scope="col">Wedstrijd</th><th scope="col">Voorspeld</th><th scope="col">Werkelijk</th><th scope="col">Uitkomst</th></tr></thead><tbody>${t}</tbody></table></div>`:""}</details>`;
- });
- return h;
 }
 function champion(){
  const all=NAMES.reduce((a,n)=>a+rem(n).length,0),f=NAMES.reduce((a,n)=>a+filled(n),0);
