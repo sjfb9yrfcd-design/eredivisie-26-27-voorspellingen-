@@ -61,20 +61,27 @@ def main():
     src = open(INDEX, encoding="utf-8").read()
     m = BLOCK.search(src)
     data = json.loads(m.group(2))
-    changed = False
+    hist = data.setdefault("hist", {})  # puntenverloop: {club: {gespeeld: punten}}
+    hist_before = json.dumps(hist, sort_keys=True)
+    stand_changed = False
     for club, c in data["clubs"].items():
         if club not in table:
             sys.exit(f"{club} staat niet in de teletekststand")
         new = table[club]
         if new["played"] < c["played"]:
             sys.exit(f"{club}: minder wedstrijden dan eerder ({new['played']} < {c['played']}); niets aangepast")
+        h = hist.setdefault(club, {})
+        h.setdefault(str(c["played"]), c["points"])  # bewaar de beginstand
         if new != {"played": c["played"], "points": c["points"]}:
             c["played"], c["points"] = new["played"], new["points"]
-            changed = True
-    if not changed:
+            stand_changed = True
+        h[str(c["played"])] = c["points"]
+    hist_changed = json.dumps(hist, sort_keys=True) != hist_before
+    if not (stand_changed or hist_changed):
         print("Geen wijzigingen")
         return
-    data["updated"] = datetime.datetime.now(ZoneInfo("Europe/Amsterdam")).date().isoformat()
+    if stand_changed:
+        data["updated"] = datetime.datetime.now(ZoneInfo("Europe/Amsterdam")).date().isoformat()
     block = m.group(1) + "\n" + json.dumps(data, ensure_ascii=False, indent=1) + "\n" + m.group(3)
     open(INDEX, "w", encoding="utf-8").write(src[:m.start()] + block + src[m.end():])
     print("Bijgewerkt:", {k: v for k, v in table.items() if k in data["clubs"]})
