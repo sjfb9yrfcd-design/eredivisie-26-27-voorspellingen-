@@ -467,8 +467,10 @@ async function makeShare(){
  }catch(e){out.textContent="Plaatje maken is niet gelukt."}
 }
 async function doShare(){
- const c=champion();
- try{await navigator.share({files:[shareFile],title:"Mijn Eredivisie-voorspelling",text:c?`Mijn kampioen: ${c}. Voorspel zelf:`:"Mijn Eredivisie-voorspelling. Voorspel zelf:"})}
+ const c=champion(),http=/^https?:$/.test(location.protocol),link=http?location.origin+location.pathname.replace(/index\.html$/,""):"";
+ /* De link staat in de tekst zelf: veel apps negeren een los url-veld zodra er een plaatje wordt meegestuurd. */
+ const text=(c?`Mijn kampioen: ${c}. Voorspel zelf:`:"Mijn Eredivisie-voorspelling. Voorspel zelf:")+(link?` ${link}`:"");
+ try{await navigator.share({files:[shareFile],title:"Mijn Eredivisie-voorspelling",text})}
  catch(e){if(e&&e.name!=="AbortError")$("shareSt").textContent="Delen lukte niet. Download het plaatje en deel het zelf."}
 }
 $("shareBtn").onclick=makeShare;$("shareGo").onclick=doShare;
