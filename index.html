@@ -4,6 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wie wordt kampioen? Eredivisie 2026/27</title>
+<!-- Neem je later een eigen domein: vervang dan de 5 keer dat hieronder het github.io-adres staat door je nieuwe adres (met https:// en een slash aan het eind).
+     og-image.png moet in dezelfde map staan als index.html. -->
+<meta name="description" content="Vul de resterende wedstrijden in en ontdek wie Eredivisie-kampioen 2026/27 wordt: Feyenoord, Ajax, PSV of AZ. Elke week bijgewerkt met de nieuwe stand.">
+<link rel="canonical" href="https://sjfb9yrfcd-design.github.io/eredivisie-26-27-voorspellingen-/">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:site_name" content="Wie wordt kampioen?">
+<meta property="og:title" content="Wie wordt kampioen? Eredivisie 2026/27">
+<meta property="og:description" content="Vul de resterende wedstrijden in en ontdek wie de titel pakt. Doe jij ook een voorspelling?">
+<meta property="og:url" content="https://sjfb9yrfcd-design.github.io/eredivisie-26-27-voorspellingen-/">
+<meta property="og:image" content="https://sjfb9yrfcd-design.github.io/eredivisie-26-27-voorspellingen-/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Wie wordt kampioen? Eredivisie 2026/27, met Feyenoord, Ajax, PSV en AZ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wie wordt kampioen? Eredivisie 2026/27">
+<meta name="twitter:description" content="Vul de resterende wedstrijden in en ontdek wie de titel pakt. Doe jij ook een voorspelling?">
+<meta name="twitter:image" content="https://sjfb9yrfcd-design.github.io/eredivisie-26-27-voorspellingen-/og-image.png">
 <style>
 :root{--ink:#1c1f23;--mute:#5b6270;--line:#e3e5e9;--soft:#f5f5f7;--c:#E2001A;--c2:#111;--tint:#e2001a12}
 *{box-sizing:border-box}
@@ -92,8 +111,8 @@ a.reset{display:inline-block;text-decoration:none}
 <p class="sub" id="duelNote" style="margin-top:18px;font-size:13.5px">Duels tussen de vier clubs hebben het label onderling duel en een grijze achtergrond. Kies je bij het ene team 3 punten, dan krijgt de tegenstander automatisch 0 (en bij een gelijkspel krijgen beide 1 punt). Je invoer blijft bewaard in je browser; met een herstelcode ook online.</p>
 <section class="save" id="shareBox" aria-labelledby="shareH">
 <h2 id="shareH">Deel je voorspelling</h2>
-<p>Maak een plaatje van jouw verwachte eindstand en deel het met vrienden.</p>
-<div class="row"><button type="button" class="reset primary" id="shareBtn">Maak plaatje</button></div>
+<p>Maak een plaatje van jouw verwachte eindstand en deel het met vrienden, of deel alleen de link.</p>
+<div class="row"><button type="button" class="reset primary" id="shareBtn">Maak plaatje</button><button type="button" class="reset" id="linkBtn">Deel link</button></div>
 <div id="shareOut" hidden>
 <img id="sharePrev" alt="Plaatje met jouw voorspelde eindstand van de vier clubs">
 <div class="row"><button type="button" class="reset" id="shareGo" hidden>Deel…</button><a class="reset" id="shareDl" download="kampioen-voorspelling.png">Download plaatje</a></div>
@@ -110,6 +129,7 @@ a.reset{display:inline-block;text-decoration:none}
 <p>Zonder account of e-mailadres. Je krijgt een willekeurige herstelcode; daarmee haal je je voorspellingen op elk apparaat terug. Raak je de code kwijt, dan is er geen manier om je voorspellingen terug te vinden.</p>
 <div class="row" id="codeRow" hidden><span class="sr">Jouw herstelcode:</span><code class="code" id="codeVal"></code><button type="button" class="reset" id="copyCode">Kopieer code</button></div>
 <div class="row"><button type="button" class="reset primary" id="saveBtn">Bewaar online</button></div>
+<div class="row" id="afterSave" hidden><button type="button" class="reset primary" id="goShare" data-view="share">Deel je voorspelling met vrienden</button></div>
 <div class="row"><label class="sr" for="codeIn">Herstelcode invullen</label><input id="codeIn" type="text" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="24" placeholder="XXXX-XXXX-XXXX-XXXX"><button type="button" class="reset" id="loadBtn">Haal op</button></div>
 <p class="st" id="saveSt" role="status" aria-live="polite"></p>
 </section>
@@ -447,7 +467,7 @@ function drawShare(){
  const tot=NAMES.reduce((a,n)=>a+rem(n).length,0),fl=NAMES.reduce((a,n)=>a+filled(n),0);
  x.fillStyle="#5b6270";x.font=`500 28px ${SANS}`;x.fillText(`Ingevuld: ${fl} van ${tot} wedstrijden`,72,1282);
  const url=/^https?:$/.test(location.protocol)?location.host+location.pathname.replace(/index\.html$/,"").replace(/\/$/,""):"";
- if(url){x.fillStyle="#1c1f23";fit("Voorspel zelf: "+url,936,32,700,SANS);x.fillText("Voorspel zelf: "+url,72,1326)}
+ if(url){x.fillStyle="#1c1f23";fit("En jij? Voorspel zelf: "+url,936,32,700,SANS);x.fillText("En jij? Voorspel zelf: "+url,72,1326)}
  return cv;
 }
 let shareUrl=null,shareFile=null;
@@ -466,14 +486,25 @@ async function makeShare(){
   out.textContent=can?"Klaar. Deel het plaatje of download het.":"Klaar. Download het plaatje, of bewaar het door lang op de afbeelding te drukken.";
  }catch(e){out.textContent="Plaatje maken is niet gelukt."}
 }
-async function doShare(){
- const c=champion(),http=/^https?:$/.test(location.protocol),link=http?location.origin+location.pathname.replace(/index\.html$/,""):"";
+function siteLink(){return /^https?:$/.test(location.protocol)?location.origin+location.pathname.replace(/index\.html$/,""):""}
+function shareText(){
+ const c=champion(),link=siteLink();
  /* De link staat in de tekst zelf: veel apps negeren een los url-veld zodra er een plaatje wordt meegestuurd. */
- const text=(c?`Mijn kampioen: ${c}. Voorspel zelf:`:"Mijn Eredivisie-voorspelling. Voorspel zelf:")+(link?` ${link}`:"");
+ return (c?`Ik zeg: ${c} wordt kampioen. En jij? Doe je voorspelling:`:"Wie wordt kampioen van de Eredivisie 2026/27? Doe je voorspelling:")+(link?` ${link}`:"");
+}
+async function shareLink(){
+ const out=$("shareSt"),link=siteLink();
+ if(!link){out.textContent="De link is pas te delen als de site online staat.";return}
+ if(navigator.share){try{await navigator.share({title:"Wie wordt kampioen? Eredivisie 2026/27",text:shareText()})}catch(e){if(e&&e.name!=="AbortError")out.textContent="Delen lukte niet."}return}
+ try{await navigator.clipboard.writeText(shareText());out.textContent="Tekst en link gekopieerd. Plak ze in je app."}
+ catch(e){out.textContent="Kopiëren lukte niet. De link is: "+link}
+}
+async function doShare(){
+ const text=shareText();
  try{await navigator.share({files:[shareFile],title:"Mijn Eredivisie-voorspelling",text})}
  catch(e){if(e&&e.name!=="AbortError")$("shareSt").textContent="Delen lukte niet. Download het plaatje en deel het zelf."}
 }
-$("shareBtn").onclick=makeShare;$("shareGo").onclick=doShare;
+$("shareBtn").onclick=makeShare;$("shareGo").onclick=doShare;$("linkBtn").onclick=shareLink;
 
 /* ===== Online opslaan met herstelcode (Supabase) =====
    Vul hieronder de Project-URL en de publishable (of anon) key in.
@@ -510,7 +541,7 @@ function clean(d){
 }
 function showCode(){
  if(!code)return;
- $("codeVal").textContent=code;$("codeRow").hidden=false;$("saveBtn").textContent="Bewaar nu";
+ $("codeVal").textContent=code;$("codeRow").hidden=false;$("afterSave").hidden=false;$("saveBtn").textContent="Bewaar nu";
 }
 async function saveNow(){
  if(!sbOn())return;
@@ -556,6 +587,7 @@ async function loadNow(){
 if(sbOn()){
  $("saveBox").hidden=false;showCode();loadStats();
  $("saveBtn").onclick=()=>{clearTimeout(saveTimer);saveNow()};
+ $("goShare").addEventListener("click",()=>setTimeout(()=>$("shareBox").scrollIntoView({behavior:"smooth",block:"start"}),50));
  $("loadBtn").onclick=loadNow;
  $("codeIn").addEventListener("keydown",e=>{if(e.key==="Enter")loadNow()});
  $("copyCode").onclick=async()=>{try{await navigator.clipboard.writeText(code);st("Code gekopieerd.")}catch(e){st("Kopiëren lukte niet; selecteer de code en kopieer die zelf.")}};
