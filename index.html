@@ -393,12 +393,10 @@ function chartSnaps(n){
  return[...m].sort((a,b)=>a[0]-b[0]);
 }
 function predLine(n,act){
- /* Begint bij de eerste ingevulde wedstrijd waarvan de stand ervoor bekend is en loopt door tot de eerste lege wedstrijd. */
- const have=new Map(act),filled=Object.keys(S[n]).map(Number).filter(r=>r>=1&&r<=LAST&&S[n][r]!=null).sort((a,b)=>a-b);
- const r0=filled.find(r=>r===1||have.has(r-1));
- if(r0==null)return[];
- let p=r0===1?0:have.get(r0-1);const out=[[r0-1,p]];
- for(let r=r0;r<=LAST;r++){const v=S[n][r];if(v==null)break;p+=v;out.push([r,p])}
+ /* Vertrekt bij de laatste werkelijke stand en loopt over de nog te spelen wedstrijden door tot de eerste die nog leeg is.
+    Waarden voor rondes die al gespeeld zijn tellen niet meer mee: daar geldt de werkelijke uitslag (net als in de totalen). */
+ const c=DATA.clubs[n];let p=c.points;const out=[[c.played,p]];
+ for(let r=c.played+1;r<=LAST;r++){const v=S[n][r];if(v==null)break;p+=v;out.push([r,p])}
  return out;
 }
 function chartHTML(){
@@ -429,7 +427,7 @@ function chartHTML(){
  const leg=NAMES.map(n=>`<li><i style="border-color:${PAL[n]}"></i>${esc(n)}</li>`).join("")+
   `<li><i style="border-top-style:solid;border-color:#888"></i>werkelijk</li><li><i style="border-top-style:dashed;border-color:#888"></i>jouw voorspelling</li>`;
  const few=act.every(a=>a.length<2)?" De doorgetrokken lijn groeit na elke maandagupdate.":"",gap=act.some(a=>a.some((q,k)=>k&&q[0]-a[k-1][0]>1))?" Rondes waarvan de stand niet is bewaard, zijn met een rechte lijn verbonden.":"";
- return `<h2>Puntenverloop per speelronde</h2><p class="note">Doorgetrokken: de werkelijke stand na elke update. Stippellijn: jouw voorspelling. Die begint bij de eerste wedstrijd die je hebt ingevuld en stopt bij de eerste wedstrijd die je overslaat.${gap}${few}</p><ul class="legend">${leg}</ul><div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="chT chD"><title id="chT">Puntenverloop per speelronde</title><desc id="chD">${esc(desc)}</desc>${g}</svg></div>`;
+ return `<h2>Puntenverloop per speelronde</h2><p class="note">Doorgetrokken: de werkelijke stand na elke update. Stippellijn: jouw voorspelling. Die vertrekt bij de laatste werkelijke stand en stopt bij de eerste wedstrijd die je nog niet hebt ingevuld.${gap}${few}</p><ul class="legend">${leg}</ul><div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-labelledby="chT chD"><title id="chT">Puntenverloop per speelronde</title><desc id="chD">${esc(desc)}</desc>${g}</svg></div>`;
 }
 function champion(){
  const all=NAMES.reduce((a,n)=>a+rem(n).length,0),f=NAMES.reduce((a,n)=>a+filled(n),0);
