@@ -17,6 +17,6 @@ jobs:
         run: |
           curl --fail-with-body --show-error --silent --max-time 30 -X POST \
             "$SUPABASE_URL/rest/v1/rpc/load_prediction" \
-            -H "apikey: $SUPABASE_KEY" \
+            -H "apikey: sb_publishable_5dGM57PtoetaH3gyMa8Vpw_mpmQg-3Z" \
             -H "Content-Type: application/json" \
             -d '{"p_hash":"0000000000000000000000000000000000000000000000000000000000000000"}'
