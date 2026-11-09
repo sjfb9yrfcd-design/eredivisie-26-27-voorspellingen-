@@ -1,24 +1,22 @@
-name: Supabase wakker houden
+name: Opslag wakker houden
 
 on:
   schedule:
-    # Maandag en donderdag: ruim binnen de 7 dagen waarna een gratis project pauzeert
-    - cron: "17 4 * * 1,4"
+    # Dinsdag en vrijdag 06:00 UTC: het gratis Supabase-project pauzeert na 7 dagen zonder verkeer
+    - cron: "0 6 * * 2,5"
   workflow_dispatch:
-
-permissions: {}
 
 jobs:
   ping:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - name: Database aanroepen
+      - name: Ping Supabase
         env:
-          SUPABASE_URL: ${{ dyvvbgupykbymbmxcsdy.supabase.co }}
-          SUPABASE_KEY: ${{ sb_publishable_5dGM57PtoetaH3gyMa8Vpw_mpmQg-3Z }}
+          SUPABASE_URL: https://dyvvbgupykbymbmxcsdy.supabase.co
+          SUPABASE_KEY: sb_publishable_5dGM57PtoetaH3gyMa8Vpw_mpmQg-3Z
         run: |
           curl --fail --silent --show-error --max-time 30 -X POST \
             "$SUPABASE_URL/rest/v1/rpc/load_prediction" \
             -H "apikey: $SUPABASE_KEY" \
             -H "Content-Type: application/json" \
-            -d '{"p_hash":"0000000000000000000000000000000000000000000000000000000000000000"}'
+            -d '{"p_id":"0000000000000000000000000000000000000000000000000000000000000000"}'
