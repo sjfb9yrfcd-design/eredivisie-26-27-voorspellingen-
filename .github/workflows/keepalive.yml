@@ -14,8 +14,8 @@ jobs:
     steps:
       - name: Database aanroepen
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_URL: ${{ dyvvbgupykbymbmxcsdy.supabase.co }}
+          SUPABASE_KEY: ${{ sb_publishable_5dGM57PtoetaH3gyMa8Vpw_mpmQg-3Z }}
         run: |
           curl --fail --silent --show-error --max-time 30 -X POST \
             "$SUPABASE_URL/rest/v1/rpc/load_prediction" \
