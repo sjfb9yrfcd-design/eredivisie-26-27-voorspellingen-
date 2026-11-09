@@ -15,7 +15,7 @@ jobs:
           SUPABASE_URL: https://dyvvbgupykbymbmxcsdy.supabase.co
           SUPABASE_KEY: sb_publishable_5dGM57PtoetaH3gyMa8Vpw_mpmQg-3Z
         run: |
-                  curl --fail-with-body --show-error --silent --max-time 30 -X POST \
+          curl --fail-with-body --show-error --silent --max-time 30 -X POST \
             "$SUPABASE_URL/rest/v1/rpc/load_prediction" \
             -H "apikey: $SUPABASE_KEY" \
             -H "Content-Type: application/json" \
